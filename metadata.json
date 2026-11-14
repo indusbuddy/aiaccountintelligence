@@ -1,0 +1,8 @@
+{
+  "name": "AIAccountIntelligence",
+  "description": "An AI-powered Account Based Marketing (ABM) research and sales intelligence platform designed for target company analysis and stakeholder mapping.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
