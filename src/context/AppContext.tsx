@@ -4,15 +4,15 @@
  */
 
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { 
+import {
   Account, Stakeholder, Research, Document, Opportunity, Template, Activity, AppSettings,
   PriorityType, ResearchDepthType, ResearchStatusType, OrchestratedResearch, ResearchEvidence,
   BuyingSignal
 } from '../types';
 import { auth, googleAuthProvider, microsoftAuthProvider } from '../lib/firebase';
 import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth';
-import { 
-  INITIAL_ACCOUNTS, INITIAL_STAKEHOLDERS, MOCK_OPPORTUNITIES, 
+import {
+  INITIAL_ACCOUNTS, INITIAL_STAKEHOLDERS, MOCK_OPPORTUNITIES,
   MOCK_DOCUMENTS, INITIAL_TEMPLATES, INITIAL_ACTIVITIES, MOCK_RESEARCH_TEMPLATES, INITIAL_EVIDENCE
 } from '../data';
 import {
@@ -39,10 +39,10 @@ interface AppContextType {
   notifications: NotificationItem[];
   orchestratedResearches: Record<string, OrchestratedResearch>;
   evidence: ResearchEvidence[];
-  
+
   // Navigation
   navigate: (tab: string, accountId?: string | null, detailSubTab?: string, isCreating?: boolean) => void;
-  
+
   // Account Actions
   addAccount: (account: Omit<Account, 'id' | 'lastUpdated' | 'researchStatus' | 'opportunityScore'>) => string;
   updateAccount: (account: Account) => void;
@@ -50,35 +50,35 @@ interface AppContextType {
   shareAccount: (accountId: string, emails: string[]) => Promise<boolean>;
   triggerResearch: (accountId: string, depth: ResearchDepthType) => void;
   rerunSingleModule: (accountId: string, moduleId: string) => void;
-  
+
   // Stakeholder Actions
   addStakeholder: (stakeholder: Omit<Stakeholder, 'id'>) => string;
   updateStakeholder: (stakeholder: Stakeholder) => void;
   deleteStakeholder: (id: string) => void;
   researchStakeholder: (id: string) => Promise<void>;
-  
+
   // Opportunity Actions
   addOpportunity: (opportunity: Omit<Opportunity, 'id'>) => void;
   deleteOpportunity: (id: string) => void;
-  
+
   // Document Actions
   uploadDocument: (accountId: string, file: { name: string; size: string; type: string }) => void;
   deleteDocument: (id: string) => void;
-  
+
   // Settings Actions
   updateSettings: (settings: AppSettings) => void;
-  
+
   // Notifications Actions
   markAllNotificationsRead: () => void;
   clearNotifications: () => void;
-  
+
   // Evidence Actions
   addEvidence: (ev: Omit<ResearchEvidence, 'id'>) => void;
   deleteEvidence: (id: string) => void;
   updateEvidence: (ev: ResearchEvidence) => void;
   addManualNote: (accountId: string, title: string, content: string, category: string) => void;
   triggerSourceIngestion: (accountId: string, sourceType: string) => Promise<void>;
-  
+
   // Research retrieval
   getResearchForAccount: (accountId: string) => Research | null;
 
@@ -291,7 +291,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const updateAllowedUser = async (
-    id: number, 
+    id: number,
     updates: { email?: string; name?: string; role?: 'admin' | 'member'; status?: 'active' | 'suspended' }
   ): Promise<boolean> => {
     try {
@@ -350,21 +350,21 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
           if (res.ok) {
             setIsUnauthorized(false);
-            
+
             // Fetch User Role & Allowed Users
             fetch('/api/auth/me', { headers: { 'Authorization': `Bearer ${token}` } })
               .then(r => r.ok ? r.json() : null)
               .then(d => {
                 if (d?.role) setUserRole(d.role);
               })
-              .catch(() => {});
+              .catch(() => { });
 
             fetch('/api/allowed-users', { headers: { 'Authorization': `Bearer ${token}` } })
               .then(r => r.ok ? r.json() : null)
               .then(list => {
                 if (Array.isArray(list)) setAllowedUsersList(list);
               })
-              .catch(() => {});
+              .catch(() => { });
 
             const dbData = await res.json();
             if (dbData.settings) {
@@ -390,7 +390,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                     headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify(settings)
                   });
-                  
+
                   // 2. Save Accounts
                   for (const acc of accounts) {
                     await fetch('/api/accounts', {
@@ -614,9 +614,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Helper helper to log activities
   const addActivity = (
-    type: Activity['type'], 
-    description: string, 
-    accountId?: string, 
+    type: Activity['type'],
+    description: string,
+    accountId?: string,
     accountName?: string
   ) => {
     const newAct: Activity = {
@@ -756,7 +756,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
     // Initialize all modules to 'Not Started'
     const cleanPipeline = getNotStartedPipeline();
-    
+
     setOrchestratedResearches(prev => ({
       ...prev,
       [accountId]: {
@@ -791,7 +791,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }));
 
     const moduleKeys = [
-      'company', 'business', 'technology', 'news', 'hiring', 
+      'company', 'business', 'technology', 'news', 'hiring',
       'financial', 'strategic', 'signals', 'maturity', 'opportunities', 'executive'
     ];
 
@@ -811,23 +811,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         model: settings.modelSelection
       })
     })
-    .then(async res => {
-      if (!res) throw new Error("Authentication error or connection dropped.");
-      if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP error ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      apiData = data;
-      apiCompleted = true;
-    })
-    .catch(err => {
-      console.error("Gemini API Error:", err);
-      apiError = err.message || String(err);
-      apiCompleted = true;
-    });
+      .then(async res => {
+        if (!res) throw new Error("Authentication error or connection dropped.");
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.error || `HTTP error ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(data => {
+        apiData = data;
+        apiCompleted = true;
+      })
+      .catch(err => {
+        console.error("Gemini API Error:", err);
+        apiError = err.message || String(err);
+        apiCompleted = true;
+      });
 
     const executeNextStep = () => {
       if (currentStepIndex >= moduleKeys.length) {
@@ -839,10 +839,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         // If we have real API data, use it! Otherwise, fallback gracefully to mock template data
         let finalData: OrchestratedResearch;
-        
+
         if (apiData) {
           const overallScore = apiData.scoringFactors?.technologyFit || Math.floor(Math.random() * 21) + 75;
-          
+
           finalData = {
             accountId,
             pipeline: getCompletedPipeline(new Date().toISOString()),
@@ -1255,9 +1255,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
         const targetData = { ...currentRes.data };
         const hasTemplateData = INITIAL_ORCHESTRATED_RESEARCH[accountId]?.data &&
-                                Object.keys(INITIAL_ORCHESTRATED_RESEARCH[accountId]?.data || {}).length > 0;
+          Object.keys(INITIAL_ORCHESTRATED_RESEARCH[accountId]?.data || {}).length > 0;
         const templateData = hasTemplateData ? INITIAL_ORCHESTRATED_RESEARCH[accountId]?.data : INITIAL_ORCHESTRATED_RESEARCH['acc_microsoft']?.data;
-        
+
         if (templateData && templateData[moduleId as keyof typeof templateData]) {
           (targetData as any)[moduleId] = templateData[moduleId as keyof typeof templateData];
         }
@@ -1281,11 +1281,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       id: `stk_${Date.now()}`,
     };
     setStakeholders(prev => [...prev, newStk]);
-    
+
     const account = accounts.find(a => a.id === stkData.accountId);
     const accountName = account ? account.name : '';
     addActivity('stakeholder_added', `Stakeholder ${newStk.name} (${newStk.title}) added to ${accountName}.`, stkData.accountId, accountName);
-    
+
     fetchWithAuth('/api/stakeholders', {
       method: 'POST',
       body: JSON.stringify(newStk)
@@ -1687,7 +1687,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setOrchestratedResearches(prev => {
       const res = prev[accountId];
       if (!res) return prev;
-      
+
       const updatedCoverage = { ...res.coverage };
       if (sourceType === 'Website') {
         updatedCoverage.website = 100;
@@ -1760,7 +1760,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const userEmail = (user?.email || '').toLowerCase().trim();
     if (!userEmail) return [];
 
-    const isLeadership = 
+    const isLeadership =
       userEmail === 'mahesh@intellifysolutions.com' ||
       userEmail === 'srini@intellifysolutions.com' ||
       userEmail === 'mpbalshetwar@gmail.com';
@@ -1857,8 +1857,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const refreshAccountSignals = async (targetAccountIds?: string[]): Promise<RefreshSignalsSummary> => {
     setIsRefreshingSignals(true);
 
-    const accountIdsToRefresh = targetAccountIds && targetAccountIds.length > 0 
-      ? targetAccountIds 
+    const accountIdsToRefresh = targetAccountIds && targetAccountIds.length > 0
+      ? targetAccountIds
       : accounts.map(a => a.id);
 
     const dispatches: SignalDispatchResult[] = [];
@@ -2056,7 +2056,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       notifications: visibleNotifications,
       orchestratedResearches,
       evidence,
-      
+
       navigate,
       addAccount,
       updateAccount,
@@ -2064,29 +2064,29 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       shareAccount,
       triggerResearch,
       rerunSingleModule,
-      
+
       addStakeholder,
       updateStakeholder,
       deleteStakeholder,
       researchStakeholder,
-      
+
       addOpportunity,
       deleteOpportunity,
-      
+
       uploadDocument,
       deleteDocument,
-      
+
       updateSettings,
-      
+
       markAllNotificationsRead,
       clearNotifications,
-      
+
       addEvidence,
       deleteEvidence,
       updateEvidence,
       addManualNote,
       triggerSourceIngestion,
-      
+
       getResearchForAccount,
 
       // Signals Refresh & Notification Dispatch

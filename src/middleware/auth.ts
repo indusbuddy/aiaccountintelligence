@@ -14,7 +14,8 @@ export const BASELINE_ALLOWED_EMAILS = [
   'mahesh@intellifysolutions.com',
   'srini@intellifysolutions.com',
   'ketan.g@intellifysolutions.com',
-  'mrunal@intellifysolutions.com'
+  'mrunal@intellifysolutions.com',
+  'ecomm.indus@gmail.com'
 ];
 
 export const requireAuth = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -32,9 +33,9 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
     const uid = decodedToken.uid;
 
     if (!email) {
-      return res.status(403).json({ 
+      return res.status(403).json({
         error: 'Forbidden: A verified email address is required to access this platform.',
-        unauthorized: true 
+        unauthorized: true
       });
     }
 
@@ -62,21 +63,26 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
       });
     }
 
-    const defaultAdmins = ['mpbalshetwar@gmail.com', 'mahesh@intellifysolutions.com', 'srini@intellifysolutions.com'];
+    const defaultAdmins = ['mpbalshetwar@gmail.com', 'mahesh@intellifysolutions.com', 'srini@intellifysolutions.com', 'ecomm.indus@gmail.com'];
     const role = allowedList[0]?.role || (defaultAdmins.includes(email) || email.includes('admin') ? 'admin' : 'member');
 
-    let dbUserResult = await db.select().from(users).where(eq(users.uid, uid));
-    if (dbUserResult.length === 0) {
-      const inserted = await db.insert(users)
-        .values({ uid, email, role })
-        .onConflictDoUpdate({
-          target: users.uid,
-          set: { email, role }
-        })
-        .returning();
-      req.dbUser = inserted[0];
-    } else {
-      req.dbUser = dbUserResult[0];
+    req.dbUser = { id: uid, uid, email, role };
+    try {
+      let dbUserResult = await db.select().from(users).where(eq(users.uid, uid));
+      if (dbUserResult.length === 0) {
+        const inserted = await db.insert(users)
+          .values({ uid, email, role })
+          .onConflictDoUpdate({
+            target: users.uid,
+            set: { email, role }
+          })
+          .returning();
+        if (inserted.length > 0) req.dbUser = inserted[0];
+      } else {
+        req.dbUser = dbUserResult[0];
+      }
+    } catch (dbErr) {
+      console.warn('Database offline or unreachable, continuing with in-memory session:', dbErr);
     }
 
     next();
