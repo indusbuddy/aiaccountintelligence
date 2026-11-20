@@ -57,14 +57,14 @@ async function generateContentWithRetryAndFallback(
       } catch (error: any) {
         lastError = error;
         const errorMessage = error?.message || String(error);
-        const isUnavailable = errorMessage.includes("503") || 
-                              errorMessage.toLowerCase().includes("unavailable") || 
-                              errorMessage.toLowerCase().includes("high demand") || 
-                              errorMessage.toLowerCase().includes("rate limit") ||
-                              errorMessage.toLowerCase().includes("429");
-        
+        const isUnavailable = errorMessage.includes("503") ||
+          errorMessage.toLowerCase().includes("unavailable") ||
+          errorMessage.toLowerCase().includes("high demand") ||
+          errorMessage.toLowerCase().includes("rate limit") ||
+          errorMessage.toLowerCase().includes("429");
+
         console.error(`[Gemini API Error] Model ${currentModel} attempt ${attempt} failed: ${errorMessage}`);
-        
+
         if (isUnavailable && attempt < maxRetries) {
           console.log(`[Gemini API] Retrying in ${delay}ms...`);
           await new Promise((resolve) => setTimeout(resolve, delay));
@@ -121,7 +121,7 @@ CRITICAL RULE FOR DATA INTEGRITY: If you cannot find any verified, reliable publ
         scoringFactors: {
           type: Type.OBJECT,
           properties: {
-            technologyFit: { type: Type.INTEGER, description: "A score from 50 to 100 assessing how well their technology stack fits Intellify's services." },
+            technologyFit: { type: Type.INTEGER, description: "A score from 50 to 100 assessing how well their technology stack fits Indus Health Plus's services." },
             businessTransformation: { type: Type.INTEGER, description: "Score 50-100 indicating transformation opportunities." },
             cloudAdoption: { type: Type.INTEGER, description: "Score 50-100 of cloud progress." },
             aiInvestments: { type: Type.INTEGER, description: "Score 50-100 of AI interest/initiatives." },
@@ -375,7 +375,7 @@ CRITICAL RULE FOR DATA INTEGRITY: If you cannot find any verified, reliable publ
       model: activeModel,
       contents: prompt,
       config: {
-        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Intellify Solutions. You write beautiful, accurate, and detailed enterprise account analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
+        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Indus Health Plus. You write beautiful, accurate, and detailed enterprise account analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
         responseMimeType: "application/json",
         responseSchema: responseSchema,
         temperature: 0.2,
@@ -544,7 +544,7 @@ Structure the output exactly according to the requested JSON format schema. Keep
       model: activeModel,
       contents: prompt,
       config: {
-        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Intellify Solutions. You write beautiful, accurate, and detailed enterprise stakeholder analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
+        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Indus Health Plus. You write beautiful, accurate, and detailed enterprise stakeholder analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
         responseMimeType: "application/json",
         responseSchema: responseSchema,
         temperature: 0.2,
@@ -577,7 +577,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
 
     // Single unified DB visibility rule:
     // "All accounts should be visible to mahesh@intellifysolutions.com and srini@intellifysolutions.com and other users should be able to share accounts with each other."
-    const isGlobalViewer = 
+    const isGlobalViewer =
       userEmail === 'mahesh@intellifysolutions.com' ||
       userEmail === 'srini@intellifysolutions.com' ||
       userEmail === 'mpbalshetwar@gmail.com' ||
@@ -760,13 +760,13 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
     const userEmail = (req.user?.email || '').toLowerCase().trim();
     const userRole = req.dbUser.role || 'member';
 
-    const isGlobalViewer = 
+    const isGlobalViewer =
       userEmail === 'mahesh@intellifysolutions.com' ||
       userEmail === 'srini@intellifysolutions.com' ||
       userEmail === 'mpbalshetwar@gmail.com' ||
       userRole === 'admin';
 
-    const isCreator = currentAccount.userId === req.dbUser.id || 
+    const isCreator = currentAccount.userId === req.dbUser.id ||
       (currentAccount.createdByEmail && currentAccount.createdByEmail.toLowerCase() === userEmail);
     const isOwner = currentAccount.owner && currentAccount.owner.toLowerCase().includes(userEmail);
 

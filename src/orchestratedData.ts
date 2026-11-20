@@ -224,7 +224,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           signal: 'Heavy partner-incentive campaigns for Azure Fabric migration.',
           urgency: 'High',
           confidence: 89,
-          businessImpact: 'Enables Intellify to bundle data cleansing and pipeline setups alongside Azure sales.',
+          businessImpact: 'Enables Indus Health Plus to bundle data cleansing and pipeline setups alongside Azure sales.',
           evidence: [{ source: 'Microsoft Partner Network Bulletin', credibility: 'High' }]
         }
       ],
@@ -254,7 +254,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Advanced Solutions Development',
           estimatedBusinessValue: '$280,000',
           suggestedWorkshop: '1-Day PowerAutomate Sandbox Build',
-          suggestedAccelerator: 'Intellify Flow Connectors',
+          suggestedAccelerator: 'Indus Health Plus Flow Connectors',
           suggestedDiscoveryQuestions: [
             'Which manual workflows in customer billing are currently decoupled from Dynamics 365 ERP?',
             'How are departmental analysts resolving multi-source data mapping without crashing Fabric pipelines?'
@@ -267,7 +267,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         currentInitiatives: ['Scaling Azure OpenAI vertical integrations', 'Broadening sovereign public-sector boundaries in EU', 'Building custom silicone processing units'],
         keyRisks: ['Spiraling AI datacenter CAPEX scaling faster than near-term licensing revenue', 'GPU cluster power and supply chain bottlenecks', 'Consumer anxiety over IP privacy borders'],
         keyOpportunities: ['Strategic consulting to help Microsoft buyers demonstrate AI ROI', 'Co-building specific connectors for PowerAutomate', 'Expanding sovereign datacenter secure pipelines'],
-        recommendedStrategy: 'Position Intellify as a High-Leverage Solutions Partner. Rather than trying to sell general software, lead with a specialized consultancy focused on proving Copilot and Azure OpenAI ROI to enterprise accounts, co-designing custom value trackers.',
+        recommendedStrategy: 'Position Indus Health Plus as a High-Leverage Solutions Partner. Rather than trying to sell general software, lead with a specialized consultancy focused on proving Copilot and Azure OpenAI ROI to enterprise accounts, co-designing custom value trackers.',
         recommendedIntellifyServices: ['Enterprise Strategy Consulting', 'Advanced Solutions Development', 'Rapid Prototyping'],
         overallConfidence: 94,
       }
@@ -421,7 +421,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           signal: 'Leadership public announcements prioritizing a $2B supply chain reduction program.',
           urgency: 'Immediate',
           confidence: 90,
-          businessImpact: 'High alignment with Intellify\'s custom routing and predicting accelerators.',
+          businessImpact: 'High alignment with Indus Health Plus\'s custom routing and predicting accelerators.',
           evidence: [{ source: 'Q4 Earnings Call Transcript', credibility: 'High' }]
         }
       ],
@@ -438,7 +438,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Advanced Analytics & AI Development',
           estimatedBusinessValue: '$650,000',
           suggestedWorkshop: 'Nike Membership Intent Mapping Workshop',
-          suggestedAccelerator: 'Intellify Hyper-Personalization Module',
+          suggestedAccelerator: 'Indus Health Plus Hyper-Personalization Module',
           suggestedDiscoveryQuestions: [
             'How are your current retail apps converting in-store beacon pings to digital loyalty interactions?',
             'What latency barriers exist when combining Snowflake customer metrics with Salesforce marketing streams?'
@@ -451,7 +451,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Custom Supply Chain Solutions',
           estimatedBusinessValue: '$520,000',
           suggestedWorkshop: '1-Day Logistics Modeling Sandbox',
-          suggestedAccelerator: 'Intellify Route & Demand Predictor',
+          suggestedAccelerator: 'Indus Health Plus Route & Demand Predictor',
           suggestedDiscoveryQuestions: [
             'Where is the greatest inventory friction occurring inside the regional shipping warehouses?',
             'How do you currently adjust production schedules at Asian facilities when regional trend signals spike?'
@@ -464,7 +464,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         currentInitiatives: ['Re-engaging wholesale retailers', 'Implementing Tokyo physical-digital retail models', 'Re-architecting global logistics routing software'],
         keyRisks: ['Spike in nimbler competitors stealing running market share', 'Margin dilution due to ongoing promotional clearance cycles', 'Disconnected customer loyalty data across regional application silos'],
         keyOpportunities: ['Bespoke predictive demand engines to lower warehouse stock backlogs', 'D2C customer personalization consultancies', 'Co-innovation labs for Beaverton research alignment'],
-        recommendedStrategy: 'Lead with the $2B Operations Savings Angle. Position Intellify\'s Custom Supply Chain Predictive engines as a direct lever to lower inventory backlogs and speed up design-to-shelf latency.',
+        recommendedStrategy: 'Lead with the $2B Operations Savings Angle. Position Indus Health Plus\'s Custom Supply Chain Predictive engines as a direct lever to lower inventory backlogs and speed up design-to-shelf latency.',
         recommendedIntellifyServices: ['Advanced Analytics & AI Development', 'Custom Supply Chain Solutions'],
         overallConfidence: 86,
       }
@@ -596,7 +596,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           signal: 'Public statements by Chief Digital Officer prioritizing the deployment of LLMs in clinical report editing.',
           urgency: 'Immediate',
           confidence: 91,
-          businessImpact: 'Direct opportunity for Intellify\'s custom document indexing and parsing sandboxes.',
+          businessImpact: 'Direct opportunity for Indus Health Plus\'s custom document indexing and parsing sandboxes.',
           evidence: [{ source: 'HealthTech Executive Roundtable Webinar', credibility: 'High' }]
         },
         {
@@ -620,7 +620,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Life Sciences Regulatory AI Integration',
           estimatedBusinessValue: '$1,200,000',
           suggestedWorkshop: 'HIPAA-Compliant EHR Parsing Audit',
-          suggestedAccelerator: 'Intellify Clinical Trial Indexer',
+          suggestedAccelerator: 'Indus Health Plus Clinical Trial Indexer',
           suggestedDiscoveryQuestions: [
             'What is the average latency when your researchers screen candidate lists against trial criteria?',
             'How is the security team currently auditing third-party LLM APIs used for document draft processing?'
@@ -633,7 +633,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Advanced Solutions Development',
           estimatedBusinessValue: '$480,000',
           suggestedWorkshop: '1-Day Secure LLM Sandbox Build',
-          suggestedAccelerator: 'Intellify Document Indexer API',
+          suggestedAccelerator: 'Indus Health Plus Document Indexer API',
           suggestedDiscoveryQuestions: [
             'How are disconnected global research labs sharing pre-clinical oncology observations?',
             'What compliance bottlenecks are delaying the ingestion of external Seagen databases?'
@@ -646,7 +646,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         currentInitiatives: ['Integrating Seagen oncology databases', 'Deploying insulated research chat environments', 'Automating regulatory filing documents'],
         keyRisks: ['Slowing operational cash flow due to patent expirations', 'Severe regulatory penalties if patient data leaks', 'Strong market competitors dominating the obesity therapeutics sector'],
         keyOpportunities: ['Bespoke patient trial matching engines', 'Secure pre-clinical document parsing portals', 'Co-innovating compliance workflows'],
-        recommendedStrategy: 'Lead with Regulatory and HIPAA-Compliance Assurance. When pitching Intellify solutions, highlight our secure, isolated LLM indexing templates, demonstrating that patient data never exits the Pfizer-owned AWS VPC sandbox.',
+        recommendedStrategy: 'Lead with Regulatory and HIPAA-Compliance Assurance. When pitching Indus Health Plus solutions, highlight our secure, isolated LLM indexing templates, demonstrating that patient data never exits the Pfizer-owned AWS VPC sandbox.',
         recommendedIntellifyServices: ['Life Sciences Regulatory AI Integration', 'Advanced Solutions Development'],
         overallConfidence: 82,
       }
@@ -863,14 +863,14 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           signal: 'Strategic investment in companies specialized in managing decentralized battery micro-grids.',
           urgency: 'High',
           confidence: 89,
-          businessImpact: 'Opens partnerships to co-design grid predicting dashboards with Intellify.',
+          businessImpact: 'Opens partnerships to co-design grid predicting dashboards with Indus Health Plus.',
           evidence: [{ source: 'Venture capital filings and energy registry logs', credibility: 'Medium' }]
         },
         {
           signal: 'Recruitment campaigns for edge security engineers to protect vehicle-to-everything (V2X) links.',
           urgency: 'Immediate',
           confidence: 92,
-          businessImpact: 'High alignment with Intellify\'s advanced telemetry encryption models.',
+          businessImpact: 'High alignment with Indus Health Plus\'s advanced telemetry encryption models.',
           evidence: [{ source: 'Tesla Careers & engineering profiles', credibility: 'High' }]
         }
       ],
@@ -887,7 +887,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Custom Supply Chain Solutions',
           estimatedBusinessValue: '$820,000',
           suggestedWorkshop: 'Supply Chain Analytics Co-Innovation Forum',
-          suggestedAccelerator: 'Intellify Commodity Risk Predictor',
+          suggestedAccelerator: 'Indus Health Plus Commodity Risk Predictor',
           suggestedDiscoveryQuestions: [
             'What is the current cycle lag when your logistics planners anticipate minerals constraints at Asian ports?',
             'How is Dojo telemetry mapped into your active factory assembly scheduling?'
@@ -900,7 +900,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
           recommendedOffering: 'Advanced Solutions Development',
           estimatedBusinessValue: '$450,000',
           suggestedWorkshop: 'Edge Telemetry Decryption Workshop',
-          suggestedAccelerator: 'Intellify Secure Enclave Connector',
+          suggestedAccelerator: 'Indus Health Plus Secure Enclave Connector',
           suggestedDiscoveryQuestions: [
             'What payload latency boundaries must be respected when applying encryption layers to edge telemetry?',
             'How does vehicle-to-grid grid balancing software audit third-party micro-provider logs?'

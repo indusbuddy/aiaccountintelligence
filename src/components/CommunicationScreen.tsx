@@ -9,10 +9,10 @@ import * as Lucide from 'lucide-react';
 
 export const CommunicationScreen: React.FC = () => {
   const { accounts, navigate, triggerResearch } = useApp();
-  
+
   // Completed accounts list
   const completedAccounts = accounts.filter(a => a.researchStatus === 'Completed');
-  
+
   // States
   const [selectedAccId, setSelectedAccId] = useState(completedAccounts[0]?.id || '');
   const [activeTab, setActiveTab] = useState<'email' | 'linkedin' | 'workshop' | 'discovery'>('email');
@@ -63,14 +63,14 @@ export const CommunicationScreen: React.FC = () => {
 
 I recently reviewed your active strategic priorities for ${strategicGoal}, and it is clear that ${name} is leading the frontier in driving enterprise digitization.
 
-At Intellify, we specialize in high-impact AI accelerators that align directly with ${sector} leaders. Specifically, we see a massive opportunity for ${name} to leverage our pre-built modules for ${recommendedService}, which would address current challenges in ${specificChallenge} that we identified.
+At Indus Health Plus, we specialize in high-impact AI accelerators that align directly with ${sector} leaders. Specifically, we see a massive opportunity for ${name} to leverage our pre-built modules for ${recommendedService}, which would address current challenges in ${specificChallenge} that we identified.
 
 We have compiled a briefing paper mapping our capabilities specifically to your current initiatives. Do you have 15 minutes next Tuesday at 10:00 AM CST for a brief introductory discussion?
 
 Sincerely,
 
 ${owner}
-Intellify Account Intelligence`
+Indus Health Plus Account Intelligence`
         };
 
       case 'linkedin':
@@ -80,7 +80,7 @@ Intellify Account Intelligence`
 
 Fascinated by your leadership of ${name}'s push into ${strategicGoal}.
 
-At Intellify, we recently completed a benchmark of ${sector} digitization models, specifically looking at how custom agents resolve the bottlenecks in ${specificChallenge} you have highlighted.
+At Indus Health Plus, we recently completed a benchmark of ${sector} digitization models, specifically looking at how custom agents resolve the bottlenecks in ${specificChallenge} you have highlighted.
 
 I would love to send over our customized findings for ${name} if you are open to a brief exchange of thoughts next week.
 
@@ -99,7 +99,7 @@ Align executive sponsors, IT leads, and business unit owners on high-probability
 
 ### Agenda:
 1. **00:00 - 00:15 | Welcome & Context Setting**
-   - Introductions and brief overview of Intellify's research on ${name}'s ${strategicGoal}.
+   - Introductions and brief overview of Indus Health Plus's research on ${name}'s ${strategicGoal}.
 2. **00:15 - 00:45 | Technology Landscape Benchmark**
    - Mapping current systems against high-efficiency modern alternatives in ${sector}.
 3. **00:45 - 01:30 | Co-Innovation Ideation & Brainstorm**
@@ -125,7 +125,7 @@ Align executive sponsors, IT leads, and business unit owners on high-probability
 3. "If you could automate or inject intelligence into a single process in the next 30 days with zero friction, which would it be?"
 
 ### Alignment & Solution Mapping (15 mins)
-- Map their responses live to Intellify's ${recommendedService}.
+- Map their responses live to Indus Health Plus's ${recommendedService}.
 - Describe high-level success story of a peer organization.`
         };
     }
@@ -173,7 +173,7 @@ Align executive sponsors, IT leads, and business unit owners on high-probability
                 ))}
               </select>
             </div>
-            
+
             <div className="text-xs text-gray-400 font-medium">
               Priority: <span className="font-bold text-rose-600">{selectedAccount?.priority}</span> • suitability Index: <span className="font-bold text-[#091540]">{selectedAccount?.opportunityScore}%</span>
             </div>
@@ -195,11 +195,10 @@ Align executive sponsors, IT leads, and business unit owners on high-probability
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${
-                      isCurrent
+                    className={`w-full text-left p-3.5 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${isCurrent
                         ? 'border-[#091540] bg-[#091540] text-white shadow-xs'
                         : 'border-gray-100 bg-white hover:bg-slate-50 text-gray-500 hover:text-gray-900'
-                    }`}
+                      }`}
                   >
                     <div className={`p-2 rounded-lg ${isCurrent ? 'bg-white/10 text-white' : 'bg-blue-50 text-blue-600'}`}>
                       {Icon && <Icon className="w-4 h-4" />}

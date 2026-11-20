@@ -14,7 +14,7 @@ export const getStoredMicrosoftTenant = (): string => {
   try {
     const saved = localStorage.getItem('iaip_ms_tenant')?.trim();
     if (saved) return saved;
-  } catch {}
+  } catch { }
   return '';
 };
 
@@ -26,7 +26,7 @@ export const setStoredMicrosoftTenant = (tenant: string): void => {
     } else {
       localStorage.removeItem('iaip_ms_tenant');
     }
-  } catch {}
+  } catch { }
 };
 
 export const createMicrosoftAuthProvider = (tenantOverride?: string): OAuthProvider => {
@@ -49,7 +49,7 @@ export const createMicrosoftAuthProvider = (tenantOverride?: string): OAuthProvi
 };
 
 export const microsoftAuthProvider = createMicrosoftAuthProvider(
-  'intellifysolutions.com'  
+  getStoredMicrosoftTenant() || 'organizations'
 );
 
 

@@ -53,7 +53,7 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       "Cross-industry digital transformation solutions"
     ],
     communicationStyle: "Executive, ROI Driven, Innovation Driven",
-    recommendedApproach: "Focus strictly on business outcomes, accelerated time-to-market, and tangible customer case studies. Emphasize how Intellify's accelerators speed up Azure consumption.",
+    recommendedApproach: "Focus strictly on business outcomes, accelerated time-to-market, and tangible customer case studies. Emphasize how Indus Health Plus's accelerators speed up Azure consumption.",
     recommendedQuestions: [
       "How is Microsoft aligning global partner incentives to accelerate co-sell motions around Microsoft Fabric?",
       "What are the primary friction points your enterprise teams encounter when trying to scale Azure OpenAI pilots into production?"
@@ -72,15 +72,15 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       overallDecisionPower: "High"
     },
     engagementStrategy: {
-      bestOpeningConversation: "Focus on how Intellify can unblock and accelerate Azure commercial cloud consumption in strategic industry verticals.",
+      bestOpeningConversation: "Focus on how Indus Health Plus can unblock and accelerate Azure commercial cloud consumption in strategic industry verticals.",
       businessAngle: "Accelerating commercial cloud annual recurring revenue (ARR) and co-selling opportunities.",
       technologyAngle: "Enterprise-grade scalable generative AI on Azure paired with unified data estates on Microsoft Fabric.",
       recommendedWorkshop: "Executive Co-Sell Alignment Workshop",
-      relevantAccelerator: "Intellify Cloud Migration Framework",
+      relevantAccelerator: "Indus Health Plus Cloud Migration Framework",
       relevantCaseStudy: "Retail Giant Data Platform Modernization (35% Azure consumption lift)",
       likelyObjections: [
-        "Partner conflict: We have a large global systems integrator (GSI) network. Why use Intellify?",
-        "Capacity: Does Intellify have certified architects ready immediately?"
+        "Partner conflict: We have a large global systems integrator (GSI) network. Why use Indus Health Plus?",
+        "Capacity: Does Indus Health Plus have certified architects ready immediately?"
       ],
       suggestedNextMeeting: "15-minute partner channel alignment briefing"
     },
@@ -90,19 +90,19 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       "What partner capabilities are currently most in-demand from your account managers?",
       "How can we best align our technical accelerators with your quarterly consumption targets?",
       "Where are you seeing the most significant competitive pressure from alternative cloud providers?",
-      "What role can Intellify play in supporting your direct strategic account plans?",
+      "What role can Indus Health Plus play in supporting your direct strategic account plans?",
       "How do you evaluate co-sell partner quality and execution success?",
       "What is your target timeline for scaling industry-specific Copilot templates?",
       "How do we establish a frictionless escalation path for technical hurdles in active accounts?",
       "What is your vision for partner-led business value validation on Azure?"
     ],
     communicationPreview: {
-      executiveEmail: "Subject: Strategic Partner Alignment: Unblocking Azure Consumption & Fabric Adoption\n\nDear Judson,\n\nI hope this email finds you well. Following your recent keynote on accelerating commercial cloud adoption, I wanted to share a brief update on how Intellify Solutions is helping regional enterprise clients unlock complex data estates to fuel Azure OpenAI workloads.\n\nWe have recently launched a Microsoft Fabric Ingestion Accelerator that has compressed initial implementation timelines by 40% for our shared retail and finance clients, resulting in an immediate 3x lift in underlying Azure consumption.\n\nI would welcome the opportunity to coordinate a brief, 15-minute discussion with your strategic partner leads to explore how we can align our technical accelerators to unblock active sales opportunities in your pipeline.\n\nBest regards,\n[Your Name]\nDirector of Alliances, Intellify Solutions",
-      linkedInConnectionRequest: "Judson, enjoyed your recent keynote on scaling enterprise Azure AI. Intellify is built to unblock data estates (via Fabric) and accelerate commercial cloud consumption. I would love to connect to discuss partner alignment.",
+      executiveEmail: "Subject: Strategic Partner Alignment: Unblocking Azure Consumption & Fabric Adoption\n\nDear Judson,\n\nI hope this email finds you well. Following your recent keynote on accelerating commercial cloud adoption, I wanted to share a brief update on how Indus Health Plus is helping regional enterprise clients unlock complex data estates to fuel Azure OpenAI workloads.\n\nWe have recently launched a Microsoft Fabric Ingestion Accelerator that has compressed initial implementation timelines by 40% for our shared retail and finance clients, resulting in an immediate 3x lift in underlying Azure consumption.\n\nI would welcome the opportunity to coordinate a brief, 15-minute discussion with your strategic partner leads to explore how we can align our technical accelerators to unblock active sales opportunities in your pipeline.\n\nBest regards,\n[Your Name]\nDirector of Alliances, Indus Health Plus",
+      linkedInConnectionRequest: "Judson, enjoyed your recent keynote on scaling enterprise Azure AI. Indus Health Plus is built to unblock data estates (via Fabric) and accelerate commercial cloud consumption. I would love to connect to discuss partner alignment.",
       linkedInFollowUp: "Thanks for connecting, Judson. We are seeing major traction with our Fabric Migration Accelerator. I'd love to share a 1-page overview of how we unblocked 3 shared enterprise targets this quarter.",
       workshopInvitation: "You are cordially invited to our upcoming Executive Co-Sell Alignment Session, where we will outline shared target accounts, pre-built migration accelerators, and co-selling plays for Microsoft Fabric.",
       meetingAgenda: "1. Introductions & Alliance Objectives\n2. Case Study Review: Fabric & Azure AI Implementation\n3. Shared Enterprise Target Account Review\n4. Technical Support & Escalation SLA Alignment\n5. Next Steps & Action Items",
-      discoveryCallAgenda: "1. Understand Microsoft partner co-sell priorities\n2. Discuss active deal friction points\n3. Position Intellify's Fabric & AI accelerators\n4. Map technical resources to current pipeline"
+      discoveryCallAgenda: "1. Understand Microsoft partner co-sell priorities\n2. Discuss active deal friction points\n3. Position Indus Health Plus's Fabric & AI accelerators\n4. Map technical resources to current pipeline"
     }
   },
   stk_ms_3: {
@@ -177,16 +177,16 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       "How do you approach cloud native security architecture for multi-tenant environments?",
       "What metrics do you use to evaluate delivery success for migration partners?",
       "What are the gaps in the current native Azure tools for industry migrations?",
-      "How can Intellify best support your engineering validation cycles?",
+      "How can Indus Health Plus best support your engineering validation cycles?",
       "What compliance frameworks are currently most requested by your prospects?"
     ],
     communicationPreview: {
-      executiveEmail: "Subject: Technical Blueprint Alignment: Compliance & Migration Accelerators\n\nHi Corey,\n\nI've been following your updates on Microsoft Cloud for Industry compliance frameworks, especially regarding data residency challenges.\n\nIntellify recently completed a HIPAA-compliant core platform migration for a major healthcare provider, utilizing automated landing zones that compressed validation audits from 3 months to 2 weeks.\n\nWe have packaged these templates into a repeatable Azure Compliance Accelerator. I'd love to connect you with our lead systems architect for a quick, developer-centric walkthrough of our blueprint to see if this could help unblock some of your team's active healthcare and finance migrations.\n\nBest regards,\n[Your Name]\nLead Enterprise Architect, Intellify Solutions",
-      linkedInConnectionRequest: "Corey, excellent work on the latest Cloud for Industry blueprints. Intellify focuses on unblocking compliance roadblocks during large-scale Azure migrations. Love to connect to share technical notes.",
+      executiveEmail: "Subject: Technical Blueprint Alignment: Compliance & Migration Accelerators\n\nHi Corey,\n\nI've been following your updates on Microsoft Cloud for Industry compliance frameworks, especially regarding data residency challenges.\n\nIndus Health Plus recently completed a HIPAA-compliant core platform migration for a major healthcare provider, utilizing automated landing zones that compressed validation audits from 3 months to 2 weeks.\n\nWe have packaged these templates into a repeatable Azure Compliance Accelerator. I'd love to connect you with our lead systems architect for a quick, developer-centric walkthrough of our blueprint to see if this could help unblock some of your team's active healthcare and finance migrations.\n\nBest regards,\n[Your Name]\nLead Enterprise Architect, Indus Health Plus",
+      linkedInConnectionRequest: "Corey, excellent work on the latest Cloud for Industry blueprints. Indus Health Plus focuses on unblocking compliance roadblocks during large-scale Azure migrations. Love to connect to share technical notes.",
       linkedInFollowUp: "Thanks for connecting, Corey. I'd love to drop a link to our open-source Azure Landing Zone security template which has been optimized for highly regulated sectors.",
       workshopInvitation: "You are invited to a Technical Architecture Blueprint review, focusing on cloud security posture, container orchestration, and automated migration compliance.",
       meetingAgenda: "1. Architecture Overview & Compliance Requirements\n2. landing Zone Automation Walkthrough\n3. Kubernetes Governance & DevSecOps Integration\n4. Security & Audit Trail Validation\n5. Open Engineering Discussion",
-      discoveryCallAgenda: "1. Understand active compliance/security bottlenecks\n2. Review legacy architecture limitations\n3. Highlight Intellify landing zone accelerators\n4. Discuss technical collaboration roadmap"
+      discoveryCallAgenda: "1. Understand active compliance/security bottlenecks\n2. Review legacy architecture limitations\n3. Highlight Indus Health Plus landing zone accelerators\n4. Discuss technical collaboration roadmap"
     }
   }
 };
@@ -299,11 +299,10 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
           <button
             onClick={handleRunAIResearch}
             disabled={isResearching}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg shadow-sm cursor-pointer inline-flex items-center gap-1.5 transition-all text-white ${
-              isResearching 
-                ? 'bg-[#091540]/60 cursor-not-allowed' 
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg shadow-sm cursor-pointer inline-flex items-center gap-1.5 transition-all text-white ${isResearching
+                ? 'bg-[#091540]/60 cursor-not-allowed'
                 : 'bg-[#091540] hover:bg-[#182a74]'
-            }`}
+              }`}
           >
             <Lucide.Cpu className={`w-3.5 h-3.5 ${isResearching ? 'animate-spin' : ''}`} />
             {isResearching ? 'Synthesizing...' : intel ? 'Re-Run AI Research' : 'Generate AI Intelligence Profile'}
@@ -351,7 +350,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                 <span className="text-gray-400 font-medium">Notes</span>
                 <span className="text-gray-700 font-medium italic text-right max-w-[200px] truncate" title={stakeholder.notes}>{stakeholder.notes || 'None added'}</span>
               </div>
-              
+
               {/* Relationship mapping fields */}
               <div className="pt-2 space-y-2">
                 <div>
@@ -457,11 +456,10 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                    activeTab === tab.id
+                  className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === tab.id
                       ? 'bg-[#091540] text-white shadow-xs'
                       : 'text-gray-500 hover:text-gray-900 hover:bg-slate-50'
-                  }`}
+                    }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   {tab.label}
@@ -761,7 +759,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                 {activeTab === 'solutions' && intel.recommendedIntellifySolutions && (
                   <div className="space-y-6">
                     <div className="border-b border-gray-50 pb-4">
-                      <h3 className="text-sm font-extrabold text-[#091540]">Recommended Intellify Solutions Offerings</h3>
+                      <h3 className="text-sm font-extrabold text-[#091540]">Recommended Indus Health Plus Solutions Offerings</h3>
                       <p className="text-[11px] text-gray-400 font-semibold mt-0.5">Specific solution alignments based on current technology landscape and company challenges</p>
                     </div>
 
@@ -912,9 +910,8 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                           <div className="flex flex-wrap justify-center gap-3 w-full">
                             {allAccountStakeholders.filter(s => s.id !== stakeholder.id).slice(0, 3).map((stk, idx) => (
                               <div key={idx} className="bg-white border border-gray-200 px-3 py-2 rounded-lg text-center shadow-2xs w-44">
-                                <span className={`text-[8px] uppercase font-bold block mb-0.5 ${
-                                  stk.role === 'Champion' ? 'text-indigo-600' : 'text-gray-400'
-                                }`}>{stk.role}</span>
+                                <span className={`text-[8px] uppercase font-bold block mb-0.5 ${stk.role === 'Champion' ? 'text-indigo-600' : 'text-gray-400'
+                                  }`}>{stk.role}</span>
                                 <span className="text-[10px] font-extrabold text-gray-800 block truncate">{stk.name}</span>
                                 <span className="text-[9px] text-gray-400 font-semibold block truncate">{stk.title}</span>
                               </div>

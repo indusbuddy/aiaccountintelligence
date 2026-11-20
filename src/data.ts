@@ -228,7 +228,7 @@ export const MOCK_OPPORTUNITIES: Opportunity[] = [
     id: 'opp_ms_1',
     accountId: 'acc_microsoft',
     title: 'Cross-Industry GenAI Advisory Program',
-    description: 'Provide an executive alignment framework to integrate Intellify solutions with Microsoft Cloud for Retail & Finance, focusing on pre-integrated AI agents.',
+    description: 'Provide an executive alignment framework to integrate Indus Health Plus solutions with Microsoft Cloud for Retail & Finance, focusing on pre-integrated AI agents.',
     service: 'Enterprise Strategy Consulting',
     value: '$450,000',
     probability: 75,
@@ -284,7 +284,7 @@ export const MOCK_DOCUMENTS: Document[] = [
   {
     id: 'doc_ms_2',
     accountId: 'acc_microsoft',
-    name: 'Intellify_Services_Alignment_Deck.pptx',
+    name: 'IndusHealthPlus_Services_Alignment_Deck.pptx',
     size: '12.8 MB',
     type: 'PPTX',
     uploadedAt: '2026-06-29T16:22:00Z',
@@ -316,28 +316,28 @@ export const INITIAL_TEMPLATES: Template[] = [
     name: 'Enterprise GenAI Alignment Pitch',
     type: 'Email',
     description: 'Cold email tailored for C-level digital technology leaders focusing on co-innovation models.',
-    content: 'Subject: Co-Innovating on GenAI: Accelerating {Company_Name}\'s Strategic Roadmap\n\nDear {Contact_Name},\n\nI recently reviewed your strategic priorities for {Strategic_Priority_1}, and it is clear that {Company_Name} is leading the frontier in driving enterprise digitization.\n\nAt Intellify, we specialize in high-impact AI accelerators that align directly with {Industry} leaders. Specifically, we see a massive opportunity for {Company_Name} to leverage our pre-built modules for {Opportunity_Area} which would address current challenges in {Challenge_1}.\n\nWe have compiled a briefing paper mapping our capabilities specifically to your current initiatives. Do you have 15 minutes next Tuesday at 10:00 AM CST for a brief introductory discussion?\n\nSincerely,\n\n{Owner}\nIntellify Account Intelligence'
+    content: 'Subject: Co-Innovating on GenAI: Accelerating {Company_Name}\'s Strategic Roadmap\n\nDear {Contact_Name},\n\nI recently reviewed your strategic priorities for {Strategic_Priority_1}, and it is clear that {Company_Name} is leading the frontier in driving enterprise digitization.\n\nAt Indus Health Plus, we specialize in high-impact AI accelerators that align directly with {Industry} leaders. Specifically, we see a massive opportunity for {Company_Name} to leverage our pre-built modules for {Opportunity_Area} which would address current challenges in {Challenge_1}.\n\nWe have compiled a briefing paper mapping our capabilities specifically to your current initiatives. Do you have 15 minutes next Tuesday at 10:00 AM CST for a brief introductory discussion?\n\nSincerely,\n\n{Owner}\nIndus Health Plus Account Intelligence'
   },
   {
     id: 'tpl_2',
     name: 'C-Level LinkedIn Outreach',
     type: 'Email', // We will map under templates
     description: 'Ultra-concise LinkedIn InMail focus on mutual strategic alignment and industry benchmark.',
-    content: 'Hi {Contact_Name},\n\nFascinated by your leadership of {Company_Name}\'s push into {Strategic_Priority_1}.\n\nAt Intellify, we recently completed a benchmark of {Industry} digitization models, specifically looking at how custom agents resolve the bottlenecks in {Challenge_1} you have highlighted.\n\nI would love to send over our customized findings for {Company_Name} if you are open to a brief exchange of thoughts.\n\nBest,\n{Owner}'
+    content: 'Hi {Contact_Name},\n\nFascinated by your leadership of {Company_Name}\'s push into {Strategic_Priority_1}.\n\nAt Indus Health Plus, we recently completed a benchmark of {Industry} digitization models, specifically looking at how custom agents resolve the bottlenecks in {Challenge_1} you have highlighted.\n\nI would love to send over our customized findings for {Company_Name} if you are open to a brief exchange of thoughts.\n\nBest,\n{Owner}'
   },
   {
     id: 'tpl_3',
     name: 'AI-Enabled Digital Discovery Workshop Agenda',
     type: 'Workshop',
     description: 'A 2-hour intensive framework to align key stakeholder teams on AI roadmap prioritization.',
-    content: '# Digital Discovery & AI Roadmap Alignment Workshop\n## Client: {Company_Name}\n\n### Objective:\nAlign executive sponsors, IT leads, and business unit owners on high-probability generative AI use cases, identifying three concrete pilots.\n\n### Agenda:\n1. **00:00 - 00:15 | Welcome & Context Setting**\n   - Introductions and brief overview of Intellify\'s research on {Company_Name}\'s {Strategic_Priority_1}.\n2. **00:15 - 00:45 | Technology Landscape Benchmark**\n   - Mapping current systems against high-efficiency modern alternatives in {Industry}.\n3. **00:45 - 01:30 | Co-Innovation Ideation & Brainstorm**\n   - Group breakout to map pain points in {Challenge_1} and prioritize potential accelerators.\n4. **01:30 - 01:50 | Prioritization Grid (Value vs. Feasibility)**\n   - Plotting identified pilots on the 2x2 roadmap matrix.\n5. **01:50 - 02:00 | Next Steps & Executive Summary**\n   - Defining pilot scopes, timeline, and Proof of Concept (PoC) checkpoints.'
+    content: '# Digital Discovery & AI Roadmap Alignment Workshop\n## Client: {Company_Name}\n\n### Objective:\nAlign executive sponsors, IT leads, and business unit owners on high-probability generative AI use cases, identifying three concrete pilots.\n\n### Agenda:\n1. **00:00 - 00:15 | Welcome & Context Setting**\n   - Introductions and brief overview of Indus Health Plus\'s research on {Company_Name}\'s {Strategic_Priority_1}.\n2. **00:15 - 00:45 | Technology Landscape Benchmark**\n   - Mapping current systems against high-efficiency modern alternatives in {Industry}.\n3. **00:45 - 01:30 | Co-Innovation Ideation & Brainstorm**\n   - Group breakout to map pain points in {Challenge_1} and prioritize potential accelerators.\n4. **01:30 - 01:50 | Prioritization Grid (Value vs. Feasibility)**\n   - Plotting identified pilots on the 2x2 roadmap matrix.\n5. **01:50 - 02:00 | Next Steps & Executive Summary**\n   - Defining pilot scopes, timeline, and Proof of Concept (PoC) checkpoints.'
   },
   {
     id: 'tpl_4',
     name: 'Stakeholder Discovery Deep Dive',
     type: 'Meeting',
     description: 'Core discovery meeting script to dig into specific pain points with departmental champions.',
-    content: '## Discovery Script for {Contact_Name} ({Contact_Title})\n\n### Opening (5 mins)\n- Build rapport; acknowledge their recent work or company updates.\n- State goal: "We want to understand the active operational friction points in {Department} to ensure any future pilot is highly targeted."\n\n### Core Discovery Questions (25 mins)\n1. "Regarding your focus on {Strategic_Priority_1}, what has been the primary barrier to accelerating internal adoption?"\n2. "We identified {Challenge_1} as a potential friction point in our industry research. How is that currently manifesting inside your team\'s workflow?"\n3. "If you could automate or inject intelligence into a single process in the next 30 days with zero friction, which would it be?"\n\n### Alignment & Solution Mapping (15 mins)\n- Map their responses live to Intellify\'s {Recommended_Service}.\n- Describe high-level success story of a peer organization.'
+    content: '## Discovery Script for {Contact_Name} ({Contact_Title})\n\n### Opening (5 mins)\n- Build rapport; acknowledge their recent work or company updates.\n- State goal: "We want to understand the active operational friction points in {Department} to ensure any future pilot is highly targeted."\n\n### Core Discovery Questions (25 mins)\n1. "Regarding your focus on {Strategic_Priority_1}, what has been the primary barrier to accelerating internal adoption?"\n2. "We identified {Challenge_1} as a potential friction point in our industry research. How is that currently manifesting inside your team\'s workflow?"\n3. "If you could automate or inject intelligence into a single process in the next 30 days with zero friction, which would it be?"\n\n### Alignment & Solution Mapping (15 mins)\n- Map their responses live to Indus Health Plus\'s {Recommended_Service}.\n- Describe high-level success story of a peer organization.'
   }
 ];
 
@@ -362,7 +362,7 @@ export const INITIAL_ACTIVITIES: Activity[] = [
     id: 'act_3',
     timestamp: '2026-06-28T16:22:00Z',
     type: 'document_uploaded',
-    description: 'New alignment deck "Intellify_Services_Alignment_Deck.pptx" uploaded to Microsoft Corporation.',
+    description: 'New alignment deck "IndusHealthPlus_Services_Alignment_Deck.pptx" uploaded to Microsoft Corporation.',
     accountId: 'acc_microsoft',
     accountName: 'Microsoft Corporation'
   },
@@ -451,7 +451,7 @@ export const MOCK_RESEARCH_TEMPLATES: Record<string, Research> = {
       'Openly seeking third-party solutions integrators to design highly customized industry-specific templates for PowerPlatform.',
       'Active partner program initiatives aiming to accelerate migration of traditional on-prem SQL workloads to Azure Fabric.'
     ],
-    summary: 'Microsoft represents a triple-threat ABM profile: They are an active seller of AI services looking for ecosystem integrators like Intellify, a potential co-development partner for Cloud for Industry verticals, and an enterprise customer with deep budgets for productivity transformation consulting.'
+    summary: 'Microsoft represents a triple-threat ABM profile: They are an active seller of AI services looking for ecosystem integrators like Indus Health Plus, a potential co-development partner for Cloud for Industry verticals, and an enterprise customer with deep budgets for productivity transformation consulting.'
   },
   acc_nike: {
     accountId: 'acc_nike',
@@ -555,7 +555,7 @@ export const MOCK_RESEARCH_TEMPLATES: Record<string, Research> = {
       'Intense focus on automated logistics software as supply chain complexity spreads across three continents.',
       'Strategic interest in edge-computing security layers as the vehicle fleet expands as a target for cyber threats.'
     ],
-    summary: 'Tesla does not buy standard off-the-shelf business consulting. Intellify can only win accounts through elite engineering partnerships, supply chain prediction accelerators, or edge-security co-innovation.'
+    summary: 'Tesla does not buy standard off-the-shelf business consulting. Indus Health Plus can only win accounts through elite engineering partnerships, supply chain prediction accelerators, or edge-security co-innovation.'
   }
 };
 
@@ -667,7 +667,7 @@ export const INITIAL_EVIDENCE: ResearchEvidence[] = [
     reliability: 'High',
     overallQuality: 'A+'
   },
-  
+
   // Nike Evidence
   {
     id: 'ev_nk_1',

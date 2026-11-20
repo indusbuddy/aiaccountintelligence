@@ -14,9 +14,9 @@ import { FileUploader } from './FileUploader';
 import { Timeline } from './Timeline';
 import { EvidenceCollectionEngine } from './EvidenceCollectionEngine';
 import { StakeholderIntelligence } from './StakeholderIntelligence';
-import { 
-  StakeholderRoleType, StakeholderInfluenceType, StakeholderStatusType, 
-  PriorityType, ResearchDepthType 
+import {
+  StakeholderRoleType, StakeholderInfluenceType, StakeholderStatusType,
+  PriorityType, ResearchDepthType
 } from '../types';
 import * as Lucide from 'lucide-react';
 import { exportCompanyResearchPDF } from '../lib/pdfGenerator';
@@ -24,9 +24,9 @@ import { ShareAccountModal } from './ShareAccountModal';
 import { SignalsRefreshModal } from './SignalsRefreshModal';
 
 export const AccountDetailsScreen: React.FC = () => {
-  const { 
+  const {
     selectedAccountId, accounts, stakeholders, opportunities, documents, activities,
-    navigate, triggerResearch, rerunSingleModule, orchestratedResearches, addStakeholder, deleteStakeholder, 
+    navigate, triggerResearch, rerunSingleModule, orchestratedResearches, addStakeholder, deleteStakeholder,
     updateStakeholder, researchStakeholder,
     addOpportunity, deleteOpportunity, uploadDocument, deleteDocument,
     getResearchForAccount, currentDetailSubTab, evidence, addManualNote, triggerSourceIngestion
@@ -181,7 +181,7 @@ export const AccountDetailsScreen: React.FC = () => {
           >
             <Lucide.ArrowLeft className="w-4 h-4" />
           </button>
-          
+
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               <h1 className="text-xl font-bold tracking-tight text-[#091540] sm:text-2xl truncate">
@@ -245,9 +245,9 @@ export const AccountDetailsScreen: React.FC = () => {
                 <span className="text-sm font-black text-[#091540] font-mono">{account.opportunityScore}%</span>
               </div>
               <div className="w-16 h-2 rounded-full bg-slate-200 overflow-hidden">
-                <div 
-                  className="h-full bg-[#2563FF] transition-all duration-1000" 
-                  style={{ width: `${account.opportunityScore}%` }} 
+                <div
+                  className="h-full bg-[#2563FF] transition-all duration-1000"
+                  style={{ width: `${account.opportunityScore}%` }}
                 />
               </div>
             </div>
@@ -312,11 +312,10 @@ export const AccountDetailsScreen: React.FC = () => {
             <button
               key={tab.key}
               onClick={() => navigate('accounts', account.id, tab.key)}
-              className={`px-4.5 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-2 ${
-                isActive
+              className={`px-4.5 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-2 ${isActive
                   ? 'bg-[#091540] text-white shadow-xs'
                   : 'text-gray-400 hover:text-gray-900 hover:bg-slate-50'
-              }`}
+                }`}
             >
               {Icon && <Icon className="w-3.5 h-3.5" />}
               {tab.label}
@@ -342,7 +341,7 @@ export const AccountDetailsScreen: React.FC = () => {
 
       {/* Tab Screen Routing */}
       <div className="grid grid-cols-1 gap-6">
-        
+
         {/* ======================================================== OVERVIEW TAB */}
         {currentDetailSubTab === 'overview' && (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 animate-fade-in">
@@ -350,7 +349,7 @@ export const AccountDetailsScreen: React.FC = () => {
             <div className="lg:col-span-1 space-y-6">
               <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6 space-y-5">
                 <h3 className="text-sm font-bold text-[#091540] border-b border-gray-50 pb-3 uppercase tracking-wider text-[11px]">Company profile</h3>
-                
+
                 <div className="space-y-4">
                   <div>
                     <span className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-1">Sector / Industry</span>
@@ -432,7 +431,7 @@ export const AccountDetailsScreen: React.FC = () => {
                 <div className="h-16 w-16 bg-blue-50 border border-blue-100 rounded-2xl flex items-center justify-center text-blue-600 mx-auto animate-bounce">
                   <Lucide.Cpu className="w-8 h-8" />
                 </div>
-                
+
                 <div className="space-y-2">
                   <h3 className="text-lg font-black text-[#091540]">Initialize AI Account Intelligence Pipeline</h3>
                   <p className="text-xs text-gray-400 max-w-xl mx-auto leading-relaxed">
@@ -449,18 +448,17 @@ export const AccountDetailsScreen: React.FC = () => {
                         <button
                           key={d}
                           onClick={() => setSelectedDepth(d)}
-                          className={`px-3 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${
-                            selectedDepth === d 
-                              ? 'bg-[#091540] text-white' 
+                          className={`px-3 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${selectedDepth === d
+                              ? 'bg-[#091540] text-white'
                               : 'bg-white border border-gray-200 text-gray-500 hover:text-gray-900'
-                          }`}
+                            }`}
                         >
                           {d}
                         </button>
                       ))}
                     </div>
                   </div>
-                  
+
                   <div className="text-left sm:text-right shrink-0">
                     <span className="text-[9px] uppercase font-bold text-gray-400 font-mono block">Estimated Time</span>
                     <span className="text-xs font-black text-[#091540] font-mono">
@@ -503,10 +501,10 @@ export const AccountDetailsScreen: React.FC = () => {
 
           return (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 animate-fade-in">
-              
+
               {/* LEFT SIDEBAR: Pipeline Step Feed (lg:col-span-4) */}
               <div className="lg:col-span-4 space-y-6">
-                
+
                 {/* Coverage Rating Card */}
                 <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-5 space-y-4">
                   <div className="flex items-center justify-between">
@@ -517,9 +515,9 @@ export const AccountDetailsScreen: React.FC = () => {
                   </div>
 
                   <div className="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
-                    <div 
-                      className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-1000" 
-                      style={{ width: `${activeRes?.coverage.overallScore || 10}%` }} 
+                    <div
+                      className="h-full bg-gradient-to-r from-blue-500 to-emerald-500 transition-all duration-1000"
+                      style={{ width: `${activeRes?.coverage.overallScore || 10}%` }}
                     />
                   </div>
 
@@ -602,17 +600,15 @@ export const AccountDetailsScreen: React.FC = () => {
                         <button
                           key={step.id}
                           onClick={() => setActiveModuleId(step.id)}
-                          className={`w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-3 cursor-pointer ${
-                            isSelected 
-                              ? 'bg-slate-55 border-slate-300 text-slate-900 shadow-xs ring-1 ring-slate-150' 
+                          className={`w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-3 cursor-pointer ${isSelected
+                              ? 'bg-slate-55 border-slate-300 text-slate-900 shadow-xs ring-1 ring-slate-150'
                               : 'bg-white border-transparent hover:bg-slate-50 text-gray-600'
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
                             <span className="text-[10px] font-mono font-bold text-gray-400 w-4 block">0{idx + 1}</span>
-                            <div className={`p-1.5 rounded-md ${
-                              isSelected ? 'bg-[#091540] text-white' : 'bg-slate-100 text-gray-500'
-                            }`}>
+                            <div className={`p-1.5 rounded-md ${isSelected ? 'bg-[#091540] text-white' : 'bg-slate-100 text-gray-500'
+                              }`}>
                               {Icon && <Icon className="w-3.5 h-3.5" />}
                             </div>
                             <span className="text-xs font-bold truncate leading-none">{step.name}</span>
@@ -627,7 +623,7 @@ export const AccountDetailsScreen: React.FC = () => {
 
               {/* RIGHT DETAILS: Selected Module Inspection (lg:col-span-8) */}
               <div className="lg:col-span-8 space-y-6">
-                
+
                 {/* Active Module Panel Wrap */}
                 <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6 min-h-[500px] flex flex-col justify-between">
                   <div>
@@ -726,7 +722,7 @@ export const AccountDetailsScreen: React.FC = () => {
                         return (
                           <div className="space-y-6 animate-fade-in text-xs">
                             <p className="text-gray-600 leading-relaxed font-semibold">{d.description}</p>
-                            
+
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Legal Name</span>
@@ -784,7 +780,7 @@ export const AccountDetailsScreen: React.FC = () => {
                             <div className="space-y-3">
                               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">SWOT Analysis Matrix</span>
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                
+
                                 {/* Strengths */}
                                 <div className="p-5 bg-emerald-50/40 border border-emerald-100 rounded-xl space-y-3">
                                   <h4 className="font-black text-emerald-800 flex items-center gap-1.5">
@@ -957,13 +953,12 @@ export const AccountDetailsScreen: React.FC = () => {
                                   <div key={item.id} className="p-5 border border-slate-200 rounded-xl bg-white hover:bg-slate-50 transition-all space-y-3">
                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                       <span className="text-[10px] font-mono font-bold text-gray-400">{item.date} • {item.source}</span>
-                                      <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${
-                                        item.sentiment === 'Positive' 
-                                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100' 
+                                      <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${item.sentiment === 'Positive'
+                                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
                                           : item.sentiment === 'Negative'
-                                          ? 'bg-rose-50 text-rose-700 border border-rose-100'
-                                          : 'bg-slate-50 text-slate-700 border border-slate-150'
-                                      }`}>
+                                            ? 'bg-rose-50 text-rose-700 border border-rose-100'
+                                            : 'bg-slate-50 text-slate-700 border border-slate-150'
+                                        }`}>
                                         {item.sentiment} Sentiment
                                       </span>
                                     </div>
@@ -971,7 +966,7 @@ export const AccountDetailsScreen: React.FC = () => {
                                     <h4 className="text-sm font-black text-gray-800 leading-snug">{item.title}</h4>
 
                                     <div className="p-3 bg-slate-50 border border-slate-100 rounded-lg text-gray-600 leading-relaxed font-semibold">
-                                      <strong className="text-gray-700 block text-[10px] uppercase font-black tracking-wider mb-1">Impact on Intellify Positioning</strong>
+                                      <strong className="text-gray-700 block text-[10px] uppercase font-black tracking-wider mb-1">Impact on Indus Health Plus Positioning</strong>
                                       {item.impact}
                                     </div>
                                   </div>
@@ -986,7 +981,7 @@ export const AccountDetailsScreen: React.FC = () => {
                         const d = activeModuleData as any;
                         return (
                           <div className="space-y-6 animate-fade-in text-xs">
-                            
+
                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                               <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl sm:col-span-1 text-center flex flex-col justify-center">
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Open Positions</span>
@@ -1043,7 +1038,7 @@ export const AccountDetailsScreen: React.FC = () => {
                         const d = activeModuleData as any;
                         return (
                           <div className="space-y-6 animate-fade-in text-xs">
-                            
+
                             <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                               <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl">
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">TTM Revenue</span>
@@ -1075,9 +1070,8 @@ export const AccountDetailsScreen: React.FC = () => {
                                     <span className="font-bold text-gray-700">{m.metric}</span>
                                     <div className="flex items-center gap-2">
                                       <span className="font-mono font-black text-gray-800">{m.value}</span>
-                                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-black ${
-                                        m.trend === 'Up' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'
-                                      }`}>
+                                      <span className={`px-1.5 py-0.2 rounded text-[9px] font-black ${m.trend === 'Up' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-50 text-slate-500'
+                                        }`}>
                                         {m.trend === 'Up' ? '▲ Upward' : '▬ Flat'}
                                       </span>
                                     </div>
@@ -1105,11 +1099,10 @@ export const AccountDetailsScreen: React.FC = () => {
                                         </span>
                                         <h4 className="font-black text-gray-900 text-sm">{p.priority}</h4>
                                       </div>
-                                      <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${
-                                        p.impactLevel === 'High' 
-                                          ? 'bg-rose-50 text-rose-700' 
+                                      <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${p.impactLevel === 'High'
+                                          ? 'bg-rose-50 text-rose-700'
                                           : 'bg-blue-50 text-blue-700'
-                                      }`}>
+                                        }`}>
                                         {p.impactLevel} Impact
                                       </span>
                                     </div>
@@ -1170,11 +1163,10 @@ export const AccountDetailsScreen: React.FC = () => {
                                         <Lucide.Zap className="w-4 h-4 text-amber-500 fill-amber-500" />
                                         <span className="font-black text-gray-800 text-sm">Intent Highlight</span>
                                       </div>
-                                      <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${
-                                        s.urgency === 'Immediate' 
-                                          ? 'bg-rose-50 text-rose-700 border border-rose-100' 
+                                      <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${s.urgency === 'Immediate'
+                                          ? 'bg-rose-50 text-rose-700 border border-rose-100'
                                           : 'bg-amber-50 text-amber-700 border border-amber-100'
-                                      }`}>
+                                        }`}>
                                         {s.urgency} Action
                                       </span>
                                     </div>
@@ -1206,7 +1198,7 @@ export const AccountDetailsScreen: React.FC = () => {
                         const d = activeModuleData as any;
                         return (
                           <div className="space-y-6 animate-fade-in text-xs">
-                            
+
                             <div className="flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-blue-50/20 border border-slate-150 rounded-xl gap-4">
                               <div className="space-y-1">
                                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Assessed Infrastructure Profile</span>
@@ -1237,9 +1229,9 @@ export const AccountDetailsScreen: React.FC = () => {
                                       <span className="text-[#091540] font-mono">{score.value}%</span>
                                     </div>
                                     <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                                      <div 
-                                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-1000" 
-                                        style={{ width: `${score.value}%` }} 
+                                      <div
+                                        className="h-full bg-gradient-to-r from-blue-500 to-indigo-500 transition-all duration-1000"
+                                        style={{ width: `${score.value}%` }}
                                       />
                                     </div>
                                   </div>
@@ -1258,7 +1250,7 @@ export const AccountDetailsScreen: React.FC = () => {
                             <div className="space-y-5">
                               {d.map((opp: any, idx: number) => (
                                 <div key={idx} className="p-6 border border-slate-200 bg-slate-50/30 rounded-xl hover:border-slate-350 transition-all space-y-4">
-                                  
+
                                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-150 pb-3">
                                     <div>
                                       <span className="text-[9px] font-mono font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded">
@@ -1278,7 +1270,7 @@ export const AccountDetailsScreen: React.FC = () => {
                                       <span className="font-black text-slate-800">{opp.recommendedOffering}</span>
                                     </div>
                                     <div className="p-3.5 bg-white border border-slate-150 rounded-xl space-y-1">
-                                      <span className="text-[9px] font-bold uppercase text-gray-400 font-mono block">Intellify Accelerator</span>
+                                      <span className="text-[9px] font-bold uppercase text-gray-400 font-mono block">Indus Health Plus Accelerator</span>
                                       <span className="font-black text-slate-800">{opp.suggestedAccelerator}</span>
                                     </div>
                                     <div className="p-3.5 bg-white border border-slate-150 rounded-xl col-span-1 sm:col-span-2 space-y-1">
@@ -1313,7 +1305,7 @@ export const AccountDetailsScreen: React.FC = () => {
                         const d = activeModuleData as any;
                         return (
                           <div className="space-y-6 animate-fade-in text-xs">
-                            
+
                             <div className="p-5 bg-gradient-to-r from-[#091540] to-[#14266b] rounded-xl text-white space-y-2">
                               <span className="text-[10px] uppercase tracking-widest font-black text-blue-400 font-mono">Consolidated Positioning Strategy</span>
                               <p className="text-[12.5px] font-semibold leading-relaxed">
@@ -1369,7 +1361,7 @@ export const AccountDetailsScreen: React.FC = () => {
                             </div>
 
                             <div className="space-y-3 pt-1">
-                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Recommended Intellify Services</span>
+                              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Recommended Indus Health Plus Services</span>
                               <div className="flex flex-wrap gap-2">
                                 {d.recommendedIntellifyServices?.map((srv: string, idx: number) => (
                                   <span key={idx} className="px-3 py-1.5 bg-[#091540] text-white font-bold rounded-lg text-[10.5px]">
@@ -1494,8 +1486,8 @@ export const AccountDetailsScreen: React.FC = () => {
                       </thead>
                       <tbody className="divide-y divide-gray-100 text-xs font-semibold text-gray-700">
                         {accountStakeholders.map((stk) => (
-                          <tr 
-                            key={stk.id} 
+                          <tr
+                            key={stk.id}
                             className="hover:bg-slate-50/50 cursor-pointer transition-all duration-150"
                             onClick={() => setSelectedStakeholderId(stk.id)}
                           >
@@ -1537,13 +1529,12 @@ export const AccountDetailsScreen: React.FC = () => {
 
                             {/* Influence */}
                             <td className="px-6 py-4 text-center">
-                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                                stk.influence === 'High' 
-                                  ? 'text-rose-700 bg-rose-50' 
-                                  : stk.influence === 'Medium' 
-                                  ? 'text-amber-700 bg-amber-50' 
-                                  : 'text-slate-600 bg-slate-100'
-                              }`}>
+                              <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${stk.influence === 'High'
+                                  ? 'text-rose-700 bg-rose-50'
+                                  : stk.influence === 'Medium'
+                                    ? 'text-amber-700 bg-amber-50'
+                                    : 'text-slate-600 bg-slate-100'
+                                }`}>
                                 {stk.influence} Influence
                               </span>
                             </td>
@@ -1721,14 +1712,14 @@ Dear Judson Althoff,
 
 I recently reviewed your strategic priorities for scaling enterprise AI adoption through Microsoft Cloud, and it is clear that ${account.name} is leading the frontier in driving enterprise digitization.
 
-At Intellify, we specialize in high-impact AI accelerators that align directly with ${account.industry} leaders. Specifically, we see a massive opportunity for ${account.name} to leverage our pre-built modules for Cross-Industry GenAI Advisory which would address current challenges in high compute costs of running state-of-the-art LLMs.
+At Indus Health Plus, we specialize in high-impact AI accelerators that align directly with ${account.industry} leaders. Specifically, we see a massive opportunity for ${account.name} to leverage our pre-built modules for Cross-Industry GenAI Advisory which would address current challenges in high compute costs of running state-of-the-art LLMs.
 
 We have compiled a briefing paper mapping our capabilities specifically to your current initiatives. Do you have 15 minutes next Tuesday at 10:00 AM CST for a brief introductory discussion?
 
 Sincerely,
 
 ${account.owner}
-Intellify Account Intelligence`}
+Indus Health Plus Account Intelligence`}
                       </pre>
                     </div>
                   </div>
@@ -1743,7 +1734,7 @@ Intellify Account Intelligence`}
           <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-6 sm:p-8 animate-fade-in">
             <h3 className="text-base font-bold text-[#091540] mb-1">Operational Audit Logs</h3>
             <p className="text-xs text-gray-400 mb-6">Historical trail of modifications and intelligence triggers for this target.</p>
-            
+
             <div className="max-w-2xl">
               <Timeline id="details-tab-timeline" activities={accountActivities} />
             </div>
@@ -1752,14 +1743,14 @@ Intellify Account Intelligence`}
       </div>
 
       {/* ========================================== MODALS SECTION */}
-      
+
       {/* 1. STAKEHOLDER MODAL */}
       {showStakeholderModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center z-50 p-4 animate-fade-in">
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-lg w-full overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-slate-50">
               <h3 className="text-sm font-extrabold text-[#091540]">Add Account Stakeholder</h3>
-              <button 
+              <button
                 onClick={() => setShowStakeholderModal(false)}
                 className="p-1 hover:bg-slate-200 text-gray-400 hover:text-gray-700 rounded-lg transition-colors cursor-pointer"
               >
@@ -1773,22 +1764,20 @@ Intellify Account Intelligence`}
                 <button
                   type="button"
                   onClick={() => setStkForm(prev => ({ ...prev, inputMethod: 'linkedin' }))}
-                  className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${
-                    stkForm.inputMethod === 'linkedin'
+                  className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${stkForm.inputMethod === 'linkedin'
                       ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
                       : 'text-gray-500 hover:text-gray-800'
-                  }`}
+                    }`}
                 >
                   Method 1: LinkedIn URL Analysis
                 </button>
                 <button
                   type="button"
                   onClick={() => setStkForm(prev => ({ ...prev, inputMethod: 'manual' }))}
-                  className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${
-                    stkForm.inputMethod === 'manual'
+                  className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${stkForm.inputMethod === 'manual'
                       ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
                       : 'text-gray-500 hover:text-gray-800'
-                  }`}
+                    }`}
                 >
                   Method 2: Manual Entry
                 </button>
@@ -2029,7 +2018,7 @@ Intellify Account Intelligence`}
               >
                 Cancel
               </button>
-              
+
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -2058,7 +2047,7 @@ Intellify Account Intelligence`}
           <div className="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-md w-full overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between bg-slate-50">
               <h3 className="text-sm font-bold text-[#091540]">Register Custom Opportunity</h3>
-              <button 
+              <button
                 onClick={() => setShowOpportunityModal(false)}
                 className="p-1 hover:bg-slate-200 text-gray-400 hover:text-gray-700 rounded-lg transition-colors cursor-pointer"
               >
@@ -2100,7 +2089,7 @@ Intellify Account Intelligence`}
               <div>
                 <label className="text-[10px] uppercase font-bold tracking-wider text-gray-400 block mb-1">Technical Alignment Scope *</label>
                 <textarea
-                  placeholder="Provide brief details on what problem we are solving and what pilot Intellify is proposing..."
+                  placeholder="Provide brief details on what problem we are solving and what pilot Indus Health Plus is proposing..."
                   required
                   rows={3}
                   value={oppForm.description}
@@ -2158,10 +2147,10 @@ Intellify Account Intelligence`}
       )}
 
       {/* Share Account Modal */}
-      <ShareAccountModal 
-        account={account} 
-        isOpen={showShareModal} 
-        onClose={() => setShowShareModal(false)} 
+      <ShareAccountModal
+        account={account}
+        isOpen={showShareModal}
+        onClose={() => setShowShareModal(false)}
       />
 
       {/* Signals Refresh & Notification Modal */}

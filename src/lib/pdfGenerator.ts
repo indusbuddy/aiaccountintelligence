@@ -23,7 +23,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     if (y + neededHeight > pageHeight - margin) {
       doc.addPage();
       y = margin;
-      
+
       // Mini-header on new pages
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(8);
@@ -32,7 +32,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
       doc.setDrawColor(220);
       doc.setLineWidth(0.5);
       doc.line(margin, 14, 210 - margin, 14);
-      
+
       doc.setFontSize(10);
       doc.setTextColor(80);
       y = 20; // set starting y for content on new page
@@ -41,29 +41,29 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
 
   // Helper to add auto-wrapped paragraph text
   const addText = (
-    text: string, 
-    fontSize: number = 10, 
-    style: 'normal' | 'bold' | 'italic' = 'normal', 
-    color: [number, number, number] = [80, 80, 80], 
-    spacingBefore: number = 2, 
+    text: string,
+    fontSize: number = 10,
+    style: 'normal' | 'bold' | 'italic' = 'normal',
+    color: [number, number, number] = [80, 80, 80],
+    spacingBefore: number = 2,
     spacingAfter: number = 4
   ) => {
     doc.setFont("Helvetica", style);
     doc.setFontSize(fontSize);
     doc.setTextColor(color[0], color[1], color[2]);
-    
+
     const lines = doc.splitTextToSize(text, contentWidth);
     const lineHeight = fontSize * 0.45; // roughly 1.25 line-height in mm
     const blockHeight = lines.length * lineHeight;
-    
+
     checkPageBreak(spacingBefore + blockHeight + spacingAfter);
     y += spacingBefore;
-    
+
     lines.forEach((line: string) => {
       doc.text(line, margin, y);
       y += lineHeight;
     });
-    
+
     y += spacingAfter;
   };
 
@@ -97,11 +97,11 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     const titleSize = 10;
     const bodySize = 9;
     const padding = 5;
-    
+
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(titleSize);
     const wrappedTitle = doc.splitTextToSize(title, contentWidth - 2 * padding);
-    
+
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(bodySize);
     let totalBodyLines: string[] = [];
@@ -114,7 +114,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     const cardHeight = padding * 2 + (wrappedTitle.length * (titleSize * 0.45)) + 3 + (totalBodyLines.length * lineHeight);
 
     checkPageBreak(cardHeight + 6);
-    
+
     // Draw background
     doc.setFillColor(bgColor[0], bgColor[1], bgColor[2]);
     doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
@@ -125,7 +125,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(titleSize);
     doc.setTextColor(9, 21, 64);
-    
+
     let drawY = y + padding + (titleSize * 0.45) - 1;
     wrappedTitle.forEach((line: string) => {
       doc.text(line, margin + padding, drawY);
@@ -183,7 +183,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
   // Quick Executive Intro
   addSectionHeader("Executive Dossier Summary");
   addText(
-    `This briefing package consolidates findings compiled by the Intellify 11-Stage autonomous research agent pipeline. This target account, ${account.name}, operates in the ${account.industry} sector. Our analysis indicates an opportunity suitability index of ${account.opportunityScore}%, based on cloud infrastructure maturity, strategic recruitment hiring trends, and public corporate statements.`,
+    `This briefing package consolidates findings compiled by the Indus Health Plus 11-Stage autonomous research agent pipeline. This target account, ${account.name}, operates in the ${account.industry} sector. Our analysis indicates an opportunity suitability index of ${account.opportunityScore}%, based on cloud infrastructure maturity, strategic recruitment hiring trends, and public corporate statements.`,
     10,
     'normal',
     [60, 60, 60],
@@ -210,7 +210,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     addSectionHeader("01. Company Discovery");
     if (d.company) {
       addText(`Overview: ${d.company.description}`, 10, 'normal', [60, 60, 60], 2, 4);
-      
+
       // Basic info table
       drawCard("Firmographic Metrics", [
         `Legal Name: ${d.company.legalName}`,
@@ -228,7 +228,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     addSectionHeader("02. Business Analysis & SWOT");
     if (d.business) {
       addText(`Market Positioning: ${d.business.marketPosition}`, 10, 'normal', [60, 60, 60], 2, 4);
-      
+
       const swot = d.business.swot;
       if (swot) {
         drawCard("SWOT Matrix Findings", [
@@ -238,7 +238,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
           `Threats: ${swot.threats.slice(0, 3).join('; ')}`
         ]);
       }
-      
+
       if (d.business.keyOfferings) {
         addText(`Primary Offerings: ${d.business.keyOfferings.join(', ')}`, 9.5, 'bold', [80, 80, 80], 2, 4);
       }
@@ -250,7 +250,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     addSectionHeader("03. Technology Detection");
     if (d.technology) {
       addText(d.technology.summary, 10, 'normal', [60, 60, 60], 2, 6);
-      
+
       addSubSectionHeader("Detected Infrastructure Components");
       d.technology.findings.forEach(f => {
         drawCard(`${f.technology} (${f.category}) - ${f.confidence}% Confident`, [
@@ -268,7 +268,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
       d.news.forEach(item => {
         drawCard(`${item.title}`, [
           `Date: ${item.date} | Source: ${item.source} | Sentiment: ${item.sentiment}`,
-          `Impact on Intellify Positioning: ${item.impact}`
+          `Impact on Indus Health Plus Positioning: ${item.impact}`
         ]);
       });
     } else {
@@ -283,7 +283,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
         `Primary Recruitment Focus: ${d.hiring.focusAreas.join(', ')}`,
         `High Concentration Tech Skills in Demand: ${d.hiring.skillsInDemand.join(', ')}`
       ]);
-      
+
       addSubSectionHeader("Indexed Recruitment Trends");
       d.hiring.trends.forEach(t => {
         addText(`• ${t}`, 9.5, 'normal', [70, 70, 70], 1, 2);
@@ -303,7 +303,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
         `Annual R&D Spend: ${d.financial.rdSpend}`,
         `Estimated Digital Transformation Budget: ${d.financial.digitalBudgetEst}`
       ]);
-      
+
       if (d.financial.metrics && d.financial.metrics.length > 0) {
         addSubSectionHeader("Siloed Segment Metrics");
         d.financial.metrics.forEach(m => {
@@ -318,7 +318,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     addSectionHeader("07. Corporate Strategic Priorities");
     if (d.strategic && d.strategic.length > 0) {
       d.strategic.forEach((p, idx) => {
-        drawCard(`Priority ${idx+1}: ${p.priority} [${p.impactLevel} Impact]`, [
+        drawCard(`Priority ${idx + 1}: ${p.priority} [${p.impactLevel} Impact]`, [
           `Strategic Focus details: ${p.details}`,
           `Target Completion Timeline: ${p.timeline}`
         ]);
@@ -359,17 +359,17 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
     addSectionHeader("10. Co-Innovation Opportunities & Workshop Guides");
     if (d.opportunities && d.opportunities.length > 0) {
       d.opportunities.forEach((opp, idx) => {
-        drawCard(`Proposal ${idx+1}: ${opp.opportunity}`, [
+        drawCard(`Proposal ${idx + 1}: ${opp.opportunity}`, [
           `Commercial Valuation: ${opp.estimatedBusinessValue} | Priority Alignment: ${opp.priority}`,
           `Recommended Offering: ${opp.recommendedOffering}`,
-          `Suggested Intellify Accelerator: ${opp.suggestedAccelerator}`,
+          `Suggested Indus Health Plus Accelerator: ${opp.suggestedAccelerator}`,
           `Workshop Pilot Blueprint: ${opp.suggestedWorkshop}`
         ]);
-        
+
         if (opp.suggestedDiscoveryQuestions && opp.suggestedDiscoveryQuestions.length > 0) {
           addSubSectionHeader("Executive Discovery Call Questions");
           opp.suggestedDiscoveryQuestions.forEach((q, i) => {
-            addText(`  Q${i+1}: "${q}"`, 9, 'italic', [50, 50, 150], 1, 3);
+            addText(`  Q${i + 1}: "${q}"`, 9, 'italic', [50, 50, 150], 1, 3);
           });
           y += 2;
         }
@@ -384,21 +384,21 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
       drawCard("Consolidated Positioning Strategy", [
         d.executive.recommendedStrategy
       ], [9, 21, 64], [255, 255, 255]); // reverse colored card (Navy background)
-      
+
       // Update text color for Navy card text drawing
       doc.setTextColor(255, 255, 255);
-      
+
       drawCard("Briefing Summaries", [
         `Target Business Profile Summary: ${d.executive.businessSummary}`,
         `Target Tech Infrastructure Summary: ${d.executive.technologySummary}`
       ]);
-      
+
       addSubSectionHeader("Key Risks, Initiatives & Offerings");
       drawCard("Executive Matrix Alignment", [
         `Active Initiatives: ${d.executive.currentInitiatives.join('; ')}`,
         `Critical Risks & Friction: ${d.executive.keyRisks.join('; ')}`,
         `Target Opportunities: ${d.executive.keyOpportunities.join('; ')}`,
-        `Recommended Intellify Services: ${d.executive.recommendedIntellifyServices.join(', ')}`
+        `Recommended Indus Health Plus Services: ${d.executive.recommendedIntellifyServices.join(', ')}`
       ]);
     } else {
       addText("Executive recommendations currently pending.", 10, 'italic');
@@ -428,7 +428,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
     if (y + neededHeight > pageHeight - margin) {
       doc.addPage();
       y = margin;
-      
+
       // Mini-header on new pages
       doc.setFont("Helvetica", "normal");
       doc.setFontSize(8);
@@ -437,7 +437,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
       doc.setDrawColor(220);
       doc.setLineWidth(0.5);
       doc.line(margin, 14, 210 - margin, 14);
-      
+
       doc.setFontSize(10);
       doc.setTextColor(80);
       y = 20;
@@ -446,29 +446,29 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
 
   // Helper to add auto-wrapped paragraph text
   const addText = (
-    text: string, 
-    fontSize: number = 10, 
-    style: 'normal' | 'bold' | 'italic' = 'normal', 
-    color: [number, number, number] = [80, 80, 80], 
-    spacingBefore: number = 2, 
+    text: string,
+    fontSize: number = 10,
+    style: 'normal' | 'bold' | 'italic' = 'normal',
+    color: [number, number, number] = [80, 80, 80],
+    spacingBefore: number = 2,
     spacingAfter: number = 4
   ) => {
     doc.setFont("Helvetica", style);
     doc.setFontSize(fontSize);
     doc.setTextColor(color[0], color[1], color[2]);
-    
+
     const lines = doc.splitTextToSize(text, contentWidth);
     const lineHeight = fontSize * 0.45;
     const blockHeight = lines.length * lineHeight;
-    
+
     checkPageBreak(spacingBefore + blockHeight + spacingAfter);
     y += spacingBefore;
-    
+
     lines.forEach((line: string) => {
       doc.text(line, margin, y);
       y += lineHeight;
     });
-    
+
     y += spacingAfter;
   };
 
@@ -501,11 +501,11 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
     const titleSize = 10;
     const bodySize = 9;
     const padding = 5;
-    
+
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(titleSize);
     const wrappedTitle = doc.splitTextToSize(title, contentWidth - 2 * padding);
-    
+
     doc.setFont("Helvetica", "normal");
     doc.setFontSize(bodySize);
     let totalBodyLines: string[] = [];
@@ -518,7 +518,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
     const cardHeight = padding * 2 + (wrappedTitle.length * (titleSize * 0.45)) + 3 + (totalBodyLines.length * lineHeight);
 
     checkPageBreak(cardHeight + 6);
-    
+
     doc.setFillColor(bgColor[0], bgColor[1], bgColor[2]);
     doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
     doc.setLineWidth(0.5);
@@ -527,7 +527,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
     doc.setFont("Helvetica", "bold");
     doc.setFontSize(titleSize);
     doc.setTextColor(9, 21, 64);
-    
+
     let drawY = y + padding + (titleSize * 0.45) - 1;
     wrappedTitle.forEach((line: string) => {
       doc.text(line, margin + padding, drawY);
@@ -656,7 +656,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
   if (intel.recommendedQuestions && intel.recommendedQuestions.length > 0) {
     addSubSectionHeader("High-Impact Discovery Questions");
     intel.recommendedQuestions.forEach((q, idx) => {
-      addText(`  Q${idx+1}: "${q}"`, 9.5, 'italic', [50, 50, 150], 2, 3);
+      addText(`  Q${idx + 1}: "${q}"`, 9.5, 'italic', [50, 50, 150], 2, 3);
     });
   }
 
@@ -689,7 +689,7 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
     if (intel.engagementStrategy.likelyObjections && intel.engagementStrategy.likelyObjections.length > 0) {
       addSubSectionHeader("Likely Buyer Objections & Handling");
       intel.engagementStrategy.likelyObjections.forEach((obj, idx) => {
-        addText(`• Objection ${idx+1}: ${obj}`, 9.5, 'normal', [120, 50, 50], 1, 3);
+        addText(`• Objection ${idx + 1}: ${obj}`, 9.5, 'normal', [120, 50, 50], 1, 3);
       });
     }
   }
@@ -698,14 +698,14 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
   if (intel.discoveryQuestions && intel.discoveryQuestions.length > 0) {
     addSectionHeader("10 Detailed Discovery Questions");
     intel.discoveryQuestions.forEach((q, idx) => {
-      addText(`  ${idx+1}. "${q}"`, 9.5, 'bold', [60, 60, 60], 1.5, 3);
+      addText(`  ${idx + 1}. "${q}"`, 9.5, 'bold', [60, 60, 60], 1.5, 3);
     });
   }
 
   // Copywriting communication drafts
   if (intel.communicationPreview) {
     addSectionHeader("ABM Copywriting Communication Drafts");
-    
+
     if (intel.communicationPreview.executiveEmail) {
       addSubSectionHeader("Cold outreach Executive Email Template");
       addText(intel.communicationPreview.executiveEmail, 9, 'normal', [50, 50, 50], 2, 4);

@@ -49,7 +49,7 @@ export const NewAccountScreen: React.FC = () => {
       formattedWebsite = `https://${formattedWebsite}`;
     }
 
-    const newId = addAccount({
+    const accountData = {
       name: formData.name.trim(),
       website: formattedWebsite,
       industry: formData.industry,
@@ -58,10 +58,20 @@ export const NewAccountScreen: React.FC = () => {
       priority: formData.priority,
       owner: formData.owner.trim(),
       researchDepth: formData.researchDepth,
-    });
+    };
+
+    const newId = addAccount(accountData);
+
+    const fullAccount = {
+      ...accountData,
+      id: newId,
+      lastUpdated: new Date().toISOString(),
+      researchStatus: (startResearchImmediately ? 'In Progress' : 'Not Started') as any,
+      opportunityScore: 0,
+    };
 
     if (startResearchImmediately) {
-      triggerResearch(newId, formData.researchDepth);
+      triggerResearch(newId, formData.researchDepth, fullAccount);
       navigate('accounts', newId, 'research'); // Jump to the active research console!
     } else {
       navigate('accounts'); // Return to accounts index
@@ -113,9 +123,8 @@ export const NewAccountScreen: React.FC = () => {
               placeholder="e.g. Acme Corporation"
               value={formData.name}
               onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-              className={`w-full px-3.5 py-2 text-xs border rounded-lg focus:ring-1 focus:ring-blue-500 outline-hidden font-medium text-gray-800 ${
-                errors.name ? 'border-rose-300 bg-rose-50/20' : 'border-gray-200'
-              }`}
+              className={`w-full px-3.5 py-2 text-xs border rounded-lg focus:ring-1 focus:ring-blue-500 outline-hidden font-medium text-gray-800 ${errors.name ? 'border-rose-300 bg-rose-50/20' : 'border-gray-200'
+                }`}
             />
             {errors.name && <p className="text-[10px] text-rose-500 mt-1 font-semibold">{errors.name}</p>}
           </div>
@@ -130,9 +139,8 @@ export const NewAccountScreen: React.FC = () => {
               placeholder="e.g. acme.com"
               value={formData.website}
               onChange={(e) => setFormData(prev => ({ ...prev, website: e.target.value }))}
-              className={`w-full px-3.5 py-2 text-xs border rounded-lg focus:ring-1 focus:ring-blue-500 outline-hidden font-medium text-gray-800 ${
-                errors.website ? 'border-rose-300 bg-rose-50/20' : 'border-gray-200'
-              }`}
+              className={`w-full px-3.5 py-2 text-xs border rounded-lg focus:ring-1 focus:ring-blue-500 outline-hidden font-medium text-gray-800 ${errors.website ? 'border-rose-300 bg-rose-50/20' : 'border-gray-200'
+                }`}
             />
             {errors.website && <p className="text-[10px] text-rose-500 mt-1 font-semibold">{errors.website}</p>}
           </div>
@@ -209,15 +217,14 @@ export const NewAccountScreen: React.FC = () => {
                   key={prio}
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, priority: prio }))}
-                  className={`py-2 px-4 text-xs font-bold rounded-lg border text-center transition-all cursor-pointer ${
-                    formData.priority === prio
-                      ? prio === 'High'
-                        ? 'bg-rose-50 border-rose-200 text-rose-700 font-extrabold ring-1 ring-rose-300'
-                        : prio === 'Medium'
+                  className={`py-2 px-4 text-xs font-bold rounded-lg border text-center transition-all cursor-pointer ${formData.priority === prio
+                    ? prio === 'High'
+                      ? 'bg-rose-50 border-rose-200 text-rose-700 font-extrabold ring-1 ring-rose-300'
+                      : prio === 'Medium'
                         ? 'bg-amber-50 border-amber-200 text-amber-700 font-extrabold ring-1 ring-amber-300'
                         : 'bg-slate-50 border-slate-200 text-slate-700 font-extrabold ring-1 ring-slate-300'
-                      : 'bg-white border-gray-200 text-gray-500 hover:bg-slate-50'
-                  }`}
+                    : 'bg-white border-gray-200 text-gray-500 hover:bg-slate-50'
+                    }`}
                 >
                   {prio}
                 </button>
@@ -236,16 +243,14 @@ export const NewAccountScreen: React.FC = () => {
                   key={depth}
                   type="button"
                   onClick={() => setFormData(prev => ({ ...prev, researchDepth: depth }))}
-                  className={`p-3.5 text-left rounded-xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${
-                    formData.researchDepth === depth
-                      ? 'border-[#2563FF] bg-blue-50/20 text-[#091540] ring-1 ring-blue-300'
-                      : 'border-gray-200 bg-white text-gray-500 hover:bg-slate-50'
-                  }`}
+                  className={`p-3.5 text-left rounded-xl border transition-all cursor-pointer flex flex-col justify-between h-28 ${formData.researchDepth === depth
+                    ? 'border-[#2563FF] bg-blue-50/20 text-[#091540] ring-1 ring-blue-300'
+                    : 'border-gray-200 bg-white text-gray-500 hover:bg-slate-50'
+                    }`}
                 >
                   <div className="flex justify-between items-start w-full">
-                    <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${
-                      formData.researchDepth === depth ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
-                    }`}>
+                    <span className={`px-2 py-0.5 rounded text-[9px] font-bold ${formData.researchDepth === depth ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-500'
+                      }`}>
                       {depth}
                     </span>
                     {formData.researchDepth === depth && <Lucide.CheckCircle2 className="w-4.5 h-4.5 text-[#2563FF]" />}
@@ -277,7 +282,7 @@ export const NewAccountScreen: React.FC = () => {
           >
             Cancel & Return
           </button>
-          
+
           <div className="flex flex-col sm:flex-row gap-3 order-1 sm:order-2">
             <button
               type="button"

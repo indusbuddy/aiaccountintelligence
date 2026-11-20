@@ -48,7 +48,7 @@ interface AppContextType {
   updateAccount: (account: Account) => void;
   deleteAccount: (accountId: string) => void;
   shareAccount: (accountId: string, emails: string[]) => Promise<boolean>;
-  triggerResearch: (accountId: string, depth: ResearchDepthType) => void;
+  triggerResearch: (accountId: string, depth: ResearchDepthType, accountOverride?: Account) => void;
   rerunSingleModule: (accountId: string, moduleId: string) => void;
 
   // Stakeholder Actions
@@ -734,21 +734,19 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   // Trigger Research (Simulated AI Agent Execution via 11-Stage Pipeline)
-  const triggerResearch = (accountId: string, depth: ResearchDepthType) => {
-    // 1. Update status to In Progress
-    setAccounts(prev => prev.map(a => {
-      if (a.id === accountId) {
-        return {
-          ...a,
-          researchStatus: 'In Progress',
-          researchDepth: depth,
-          lastUpdated: new Date().toISOString()
-        };
+  const triggerResearch = (accountId: string, depth: ResearchDepthType, accountOverride?: Account) => {
+    // 1. Update status to In Progress (or include accountOverride if not yet committed to state)
+    setAccounts(prev => {
+      const exists = prev.some(a => a.id === accountId);
+      if (exists) {
+        return prev.map(a => a.id === accountId ? { ...a, researchStatus: 'In Progress', researchDepth: depth, lastUpdated: new Date().toISOString() } : a);
+      } else if (accountOverride) {
+        return [{ ...accountOverride, researchStatus: 'In Progress', researchDepth: depth, lastUpdated: new Date().toISOString() }, ...prev];
       }
-      return a;
-    }));
+      return prev;
+    });
 
-    const account = accounts.find(a => a.id === accountId);
+    const account = accountOverride || accounts.find(a => a.id === accountId);
     const accountName = account ? account.name : 'Unknown';
 
     addActivity('research_started', `Sarah Jenkins triggered ${depth} 11-stage AI Research Pipeline for ${accountName}.`, accountId, accountName);

@@ -118,7 +118,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                 <div className="flex flex-wrap items-center gap-2 pt-1 text-[11px]">
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
                     <Lucide.UserCheck className="w-3.5 h-3.5 text-blue-600" />
-                    Intellify Account Owner
+                    Indus Health Plus Account Owner
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
                     <Lucide.Shield className="w-3.5 h-3.5 text-purple-600" />
@@ -332,7 +332,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                       <div className="flex flex-wrap items-center gap-2 text-[10px]">
                         <span className="font-bold text-slate-400 uppercase tracking-wider">Alerts Delivered Exclusively To:</span>
                         <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-800 font-semibold border border-blue-100">
-                          👤 Intellify Owner: {dispatch.ownerName} ({dispatch.ownerEmail})
+                          👤 Indus Health Plus Owner: {dispatch.ownerName} ({dispatch.ownerEmail})
                         </span>
                         <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-100">
                           🛡️ Mahesh (mahesh@intellifysolutions.com)
@@ -366,7 +366,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                             </div>
 
                             <div className="text-[11px] text-slate-600 pl-5">
-                              <span className="font-semibold text-slate-700">Intellify Recommended Angle: </span>
+                              <span className="font-semibold text-slate-700">Indus Health Plus Recommended Angle: </span>
                               {signal.businessImpact}
                             </div>
 

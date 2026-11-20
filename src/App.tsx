@@ -38,10 +38,10 @@ const AppContent: React.FC = () => {
         <div className="absolute inset-0 bg-[radial-gradient(#2563FF_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none opacity-10" />
         <div className="flex flex-col items-center gap-4 text-center">
           <div className="p-4 bg-white/10 border border-white/20 rounded-2xl shadow-xl backdrop-blur-xs">
-            <img src="/intellify-logo-white.png" alt="Intellify Solutions" className="h-10 w-auto object-contain" />
+            <img src="/indus-logo-white.png" alt="Indus Health Plus" className="h-10 w-auto object-contain" />
           </div>
           <div>
-            <span className="text-xl font-black tracking-tight block">Intellify Solutions</span>
+            <span className="text-xl font-black tracking-tight block">Indus Health Plus</span>
             <span className="text-xs uppercase font-bold tracking-widest text-[#2563FF]">ABM AI Intelligence</span>
           </div>
           <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-slate-400">
@@ -82,7 +82,7 @@ const AppContent: React.FC = () => {
 
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-[11px] text-amber-800 mb-6 text-center leading-relaxed">
             <p className="font-semibold mb-1">Approval Required</p>
-            Access is restricted to authorized team members (<span className="font-mono font-bold text-[#091540]">@intellifysolutions.com</span> & verified administrators). Please contact an administrator to approve your email.
+            Access is restricted to authorized team members (<span className="font-mono font-bold text-[#091540]">@indushealthplus.com</span> & verified administrators). Please contact an administrator to approve your email.
           </div>
 
           <div className="w-full space-y-2.5">
@@ -156,7 +156,7 @@ const AppContent: React.FC = () => {
         <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl border border-slate-150 p-8 text-[#091540] relative z-10 flex flex-col items-center animate-fade-in">
           {/* Brand Identity */}
           <div className="flex flex-col items-center gap-2 mb-6 text-center">
-            <img src="/intellify-logo.png" alt="Intellify Solutions" className="h-12 w-auto object-contain" />
+            <img src="/indus-logo.png" alt="Indus Health Plus" className="h-12 w-auto object-contain" />
             <span className="text-[10px] uppercase font-extrabold tracking-widest text-[#2563FF] bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
               ABM AI Intelligence Platform
             </span>
@@ -311,7 +311,7 @@ const AppContent: React.FC = () => {
           {/* Brand Identity Header */}
           <div className="p-5 border-b border-white/10 flex flex-col">
             <div className="flex flex-col items-start gap-1">
-              <img src="/intellify-logo-white.png" alt="Intellify Solutions" className="h-8 w-auto object-contain" />
+              <img src="/indus-logo-white.png" alt="Indus Health Plus" className="h-8 w-auto object-contain" />
               <span className="text-[9px] uppercase font-bold tracking-widest text-[#2563FF] mt-0.5">
                 ABM AI Intelligence
               </span>
@@ -346,7 +346,7 @@ const AppContent: React.FC = () => {
           {/* Sidebar Footer */}
           <div className="p-4 border-t border-white/10 bg-[#060e2d]/60 text-center">
             <span className="text-[10px] font-bold text-slate-400 block uppercase tracking-wider">Research. Understand. Engage.</span>
-            <span className="text-[9px] text-slate-500 mt-0.5 block">© 2026 Intellify Solutions • ABM Intelligence</span>
+            <span className="text-[9px] text-slate-500 mt-0.5 block">© 2026 Indus Health Plus • ABM Intelligence</span>
           </div>
         </aside>
 
@@ -661,7 +661,7 @@ const AppContent: React.FC = () => {
             {/* Header Brand */}
             <div className="p-5 border-b border-white/10 flex flex-col">
               <div className="flex flex-col items-start gap-1">
-                <img src="/intellify-logo-white.png" alt="Intellify Solutions" className="h-8 w-auto object-contain" />
+                <img src="/indus-logo-white.png" alt="Indus Health Plus" className="h-8 w-auto object-contain" />
                 <span className="text-[9px] uppercase font-bold tracking-widest text-[#2563FF] mt-0.5">
                   ABM AI Intelligence
                 </span>
@@ -695,7 +695,7 @@ const AppContent: React.FC = () => {
 
             {/* Footer brand */}
             <div className="p-4 border-t border-white/10 text-center">
-              <span className="text-[9px] text-slate-500">© 2026 Intellify Solutions • ABM Intelligence</span>
+              <span className="text-[9px] text-slate-500">© 2026 Indus Health Plus • ABM Intelligence</span>
             </div>
           </div>
         </div>

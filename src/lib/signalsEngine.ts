@@ -58,7 +58,7 @@ export function deriveOwnerEmail(owner: string, createdByEmail?: string): string
   if (createdByEmail && createdByEmail.includes('@')) {
     return createdByEmail.toLowerCase().trim();
   }
-  
+
   return 'owner@intellifysolutions.com';
 }
 
@@ -281,7 +281,7 @@ export function createAccountSignalDispatch(
   const ownerName = extractOwnerDisplayName(account.owner);
   const ownerEmail = deriveOwnerEmail(account.owner, account.createdByEmail);
   const leadershipRecipients = [...LEADERSHIP_EMAILS];
-  
+
   // Combine all recipients ensuring uniqueness
   const allRecipients = Array.from(new Set([
     ownerEmail,
@@ -313,12 +313,12 @@ export function createAccountSignalDispatch(
  * Formats an executive notification digest ready for copy/paste or email dispatch
  */
 export function generateEmailDigestText(dispatches: SignalDispatchResult[]): string {
-  const timestamp = new Date().toLocaleString([], { 
-    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' 
+  const timestamp = new Date().toLocaleString([], {
+    month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });
 
   let text = `===========================================================\n`;
-  text += `INTELLIFY SOLUTIONS - REAL-TIME ACCOUNT SIGNALS BRIEFING\n`;
+  text += `INDUS HEALTH PLUS - REAL-TIME ACCOUNT SIGNALS BRIEFING\n`;
   text += `Date: ${timestamp}\n`;
   text += `Leadership Recipients: ${LEADERSHIP_EMAILS.join(', ')}\n`;
   text += `Scope: ${dispatches.length} Target Account(s) Refreshed\n`;
@@ -331,11 +331,11 @@ export function generateEmailDigestText(dispatches: SignalDispatchResult[]): str
     text += `• Leadership Dispatched: Mahesh Balshetwar & Srini\n`;
     text += `• Updated Opportunity Score: ${d.newScore} (+${d.scoreDelta} momentum pts)\n`;
     text += `• Fresh Buying Signals Discovered:\n`;
-    
+
     d.newSignals.forEach((s, sIdx) => {
       text += `  ${sIdx + 1}. [${s.urgency.toUpperCase()} URGENCY | ${s.confidence}% CONFIDENCE]\n`;
       text += `     Signal: "${s.signal}"\n`;
-      text += `     Intellify Entry Angle: ${s.businessImpact}\n`;
+      text += `     Indus Health Plus Entry Angle: ${s.businessImpact}\n`;
       if (s.evidence && s.evidence.length > 0) {
         text += `     Sources: ${s.evidence.map(e => e.source).join('; ')}\n`;
       }
