@@ -398,7 +398,7 @@ const AppContent: React.FC = () => {
                   setShowSignalsModal(true);
                 }}
                 className="px-2.5 py-1.5 bg-[#091540] hover:bg-[#162768] text-white rounded-lg text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer border border-[#162768]"
-                title="Refresh target accounts for new buying signals and notify respective account owners, Mahesh & Srini"
+                title="Refresh target accounts for new buying signals and notify respective account owners and leadership"
               >
                 <Lucide.Radio className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
                 <span className="hidden sm:inline">Refresh Signals</span>

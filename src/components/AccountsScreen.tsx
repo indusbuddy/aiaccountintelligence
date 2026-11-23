@@ -15,7 +15,7 @@ import { SignalsRefreshModal } from './SignalsRefreshModal';
 
 export const AccountsScreen: React.FC = () => {
   const { accounts, navigate, deleteAccount, triggerResearch } = useApp();
-  
+
   // Local Filter States
   const [searchTerm, setSearchTerm] = useState('');
   const [industryFilter, setIndustryFilter] = useState('All');
@@ -33,9 +33,9 @@ export const AccountsScreen: React.FC = () => {
   const filteredAccounts = accounts
     .filter(acc => {
       const matchesSearch = acc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            acc.website.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            acc.industry.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        acc.website.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        acc.industry.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesIndustry = industryFilter === 'All' || acc.industry === industryFilter;
       const matchesPriority = priorityFilter === 'All' || acc.priority === priorityFilter;
       const matchesStatus = statusFilter === 'All' || acc.researchStatus === statusFilter;
@@ -76,7 +76,7 @@ export const AccountsScreen: React.FC = () => {
               setShowSignalsModal(true);
             }}
             className="inline-flex items-center justify-center px-3.5 py-2 text-xs font-bold text-[#091540] bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg shadow-2xs transition-all duration-200 cursor-pointer gap-1.5"
-            title="Refresh accounts for new buying signals and notify respective account owners, Mahesh & Srini"
+            title="Refresh accounts for new buying signals and notify respective account owners and leadership"
           >
             <Lucide.Radio className="w-4 h-4 text-amber-600 animate-pulse" />
             <span>Refresh Signals & Notify</span>
@@ -104,7 +104,7 @@ export const AccountsScreen: React.FC = () => {
             className="w-full pl-9.5 pr-4 py-2 text-xs border border-gray-200 rounded-lg bg-gray-50/50 focus:bg-white focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-hidden font-medium text-gray-800"
           />
           {searchTerm && (
-            <button 
+            <button
               onClick={() => setSearchTerm('')}
               className="absolute right-3 top-2 text-gray-400 hover:text-gray-600"
             >
@@ -198,7 +198,7 @@ export const AccountsScreen: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-gray-100 text-xs font-semibold text-gray-700">
                 {filteredAccounts.map((acc) => (
-                  <tr 
+                  <tr
                     key={acc.id}
                     className="hover:bg-slate-50/70 transition-colors"
                   >
@@ -215,10 +215,10 @@ export const AccountsScreen: React.FC = () => {
                           >
                             {acc.name}
                           </button>
-                          <a 
-                            href={acc.website} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
+                          <a
+                            href={acc.website}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-[10px] text-gray-400 font-medium inline-flex items-center gap-0.5 mt-0.5 hover:text-gray-600"
                           >
                             {acc.website.replace(/^https?:\/\//i, '')} <Lucide.ExternalLink className="w-2.5 h-2.5" />
@@ -284,7 +284,7 @@ export const AccountsScreen: React.FC = () => {
                             setShowSignalsModal(true);
                           }}
                           className="p-1.5 text-gray-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all cursor-pointer"
-                          title={`Refresh market signals for ${acc.name} and notify ${acc.owner.split('(')[0].trim()}, Mahesh & Srini`}
+                          title={`Refresh market signals for ${acc.name} and notify ${acc.owner.split('(')[0].trim()} and leadership`}
                         >
                           <Lucide.Radio className="w-3.5 h-3.5 text-amber-500" />
                         </button>
@@ -324,10 +324,10 @@ export const AccountsScreen: React.FC = () => {
       )}
 
       {/* Share Account Dialog */}
-      <ShareAccountModal 
-        account={sharingAccount} 
-        isOpen={!!sharingAccount} 
-        onClose={() => setSharingAccount(null)} 
+      <ShareAccountModal
+        account={sharingAccount}
+        isOpen={!!sharingAccount}
+        onClose={() => setSharingAccount(null)}
       />
 
       {/* Signals Refresh & Notification Modal */}

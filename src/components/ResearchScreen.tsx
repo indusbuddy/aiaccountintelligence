@@ -34,7 +34,7 @@ export const ResearchScreen: React.FC = () => {
         <button
           onClick={() => setShowSignalsModal(true)}
           className="inline-flex items-center justify-center px-3.5 py-2 text-xs font-bold text-[#091540] bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg shadow-2xs transition-all duration-200 cursor-pointer gap-1.5 shrink-0"
-          title="Refresh target accounts for new market signals and notify respective account owners, Mahesh & Srini"
+          title="Refresh target accounts for new market signals and notify respective account owners and leadership"
         >
           <Lucide.Radio className="w-4 h-4 text-amber-600 animate-pulse" />
           <span>Refresh Signals & Notify</span>
@@ -61,19 +61,17 @@ export const ResearchScreen: React.FC = () => {
             <button
               key={tab}
               onClick={() => setStatusFilter(tab)}
-              className={`py-3 px-5 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
-                isActive
+              className={`py-3 px-5 text-xs font-bold border-b-2 transition-all cursor-pointer flex items-center gap-2 ${isActive
                   ? 'border-[#091540] text-[#091540]'
                   : 'border-transparent text-gray-400 hover:text-gray-600'
-              }`}
+                }`}
             >
               {tab === 'All' && 'All Pipelines'}
               {tab === 'Completed' && 'Completed Summary'}
               {tab === 'In Progress' && 'Mapping Active'}
               {tab === 'Not Started' && 'Awaiting Analysis'}
-              <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-bold ${
-                isActive ? 'bg-[#091540] text-white' : 'bg-slate-100 text-gray-400'
-              }`}>
+              <span className={`px-1.5 py-0.2 rounded-full text-[9px] font-bold ${isActive ? 'bg-[#091540] text-white' : 'bg-slate-100 text-gray-400'
+                }`}>
                 {count}
               </span>
             </button>
@@ -106,7 +104,7 @@ export const ResearchScreen: React.FC = () => {
                 <h4 className="mt-4 text-sm font-bold text-gray-900 leading-snug truncate">
                   {acc.name}
                 </h4>
-                
+
                 <p className="text-[10px] text-gray-400 font-medium mt-0.5">
                   {acc.industry} • {acc.country}
                 </p>
@@ -122,8 +120,8 @@ export const ResearchScreen: React.FC = () => {
                 ) : (
                   <div className="mt-5 p-3 bg-slate-50 border border-slate-100 rounded-lg text-center">
                     <span className="text-[10px] text-gray-400 italic font-medium">
-                      {acc.researchStatus === 'In Progress' 
-                        ? 'AI compilation active...' 
+                      {acc.researchStatus === 'In Progress'
+                        ? 'AI compilation active...'
                         : 'Awaiting strategic mapping...'}
                     </span>
                   </div>

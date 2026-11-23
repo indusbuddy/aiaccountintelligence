@@ -975,7 +975,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 keyRisks: apiData.executive?.keyRisks || [],
                 keyOpportunities: apiData.executive?.keyOpportunities || [],
                 recommendedStrategy: apiData.executive?.recommendedStrategy || "Lead with co-innovation consults.",
-                recommendedIntellifyServices: apiData.executive?.recommendedIntellifyServices || [],
+                recommendedIndusServices: apiData.executive?.recommendedIndusServices || [],
                 overallConfidence: apiData.executive?.overallConfidence || 85
               }
             }
@@ -1075,7 +1075,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 keyRisks: [],
                 keyOpportunities: [],
                 recommendedStrategy: 'Configure your Google Gemini API Key in settings and launch research to generate a tailored enterprise strategy.',
-                recommendedIntellifyServices: [],
+                recommendedIndusServices: [],
                 overallConfidence: 0,
               }
             }
@@ -1753,15 +1753,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     });
   };
 
-  // Notifications: filtered so Market Signals are informed ONLY to account owners of Intellify, Mahesh, and Srini
+  // Notifications: filtered so Market Signals are informed to account owners and Indus Health Plus leadership
   const visibleNotifications = useMemo(() => {
     const userEmail = (user?.email || '').toLowerCase().trim();
     if (!userEmail) return [];
 
     const isLeadership =
-      userEmail === 'mahesh@intellifysolutions.com' ||
-      userEmail === 'srini@intellifysolutions.com' ||
-      userEmail === 'mpbalshetwar@gmail.com';
+      userEmail === 'shailesh.thakare@indushealthplus.com' ||
+      userEmail === 'shashaank.d@indushealthplus.com' ||
+      userEmail === 'balaji.hadole@indushealthplus.com' ||
+      userEmail === 'samarth.patki@indushealthplus.com' ||
+      userEmail === 'ecomm.indus@gmail.com' ||
+      userRole === 'admin';
 
     return notifications.filter(n => {
       // Non-signal notifications (e.g. general alerts, system events) are normal
@@ -1769,7 +1772,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return true;
       }
 
-      // Mahesh and Srini are informed of all market signals
+      // Leadership members are informed of all market signals
       if (isLeadership) {
         return true;
       }
@@ -1781,7 +1784,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       }
 
-      // Check if user is the Intellify Account Owner for this target account
+      // Check if user is the Indus Health Plus Account Owner for this target account
       if (n.accountId) {
         const acc = accounts.find(a => a.id === n.accountId);
         if (acc) {
@@ -1792,10 +1795,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       }
 
-      // If user is not Mahesh, not Srini, and not the Intellify account owner, do not inform
+      // If user is not leadership and not the account owner, do not inform
       return false;
     });
-  }, [notifications, user, accounts]);
+  }, [notifications, user, accounts, userRole]);
 
   const markAllNotificationsRead = () => {
     const visibleIds = new Set(visibleNotifications.map(n => n.id));
@@ -1939,11 +1942,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       };
       updatedOrchestrations[accId] = newOrch;
 
-      // 4. Create Notification item - Exclusively informed to Intellify Account Owner, Mahesh, and Srini
+      // 4. Create Notification item - Exclusively informed to Indus Health Plus Account Owner & Leadership
       const accountNotif: NotificationItem = {
         id: `sig_notif_${accId}_${Date.now()}_${Math.random().toString(36).substring(2, 5)}`,
         title: `🚨 Fresh Signals: ${account.name}`,
-        description: `Discovered ${freshSignals.length} new market signals. Dispatched exclusively to Intellify Account Owner ${dispatch.ownerName} (${dispatch.ownerEmail}), Mahesh, and Srini.`,
+        description: `Discovered ${freshSignals.length} new market signals. Dispatched to Account Owner ${dispatch.ownerName} (${dispatch.ownerEmail}) and Indus Health Plus leadership.`,
         read: false,
         timestamp,
         type: 'signal',
@@ -1957,7 +1960,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       // 5. Add Activity
       addActivity(
         'evidence_collected',
-        `Refreshed market signals for ${account.name} (+${dispatch.scoreDelta} momentum pts). Dispatched exclusively to ${dispatch.ownerName}, Mahesh & Srini.`,
+        `Refreshed market signals for ${account.name} (+${dispatch.scoreDelta} momentum pts). Dispatched to ${dispatch.ownerName} and Indus Health Plus leadership.`,
         accId,
         account.name
       );
@@ -1992,7 +1995,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const summaryNotif: NotificationItem = {
       id: `sig_summary_${Date.now()}`,
       title: `⚡ Signals Refreshed & Dispatched (${dispatches.length} Accounts)`,
-      description: `Synchronized ${totalSignalsCount} market intent vectors. Informed exclusively to Intellify account owners, Mahesh, and Srini.`,
+      description: `Synchronized ${totalSignalsCount} market intent vectors. Informed to Indus Health Plus account owners and leadership.`,
       read: false,
       timestamp,
       type: 'signal',

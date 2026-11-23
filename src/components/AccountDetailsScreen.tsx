@@ -207,7 +207,7 @@ export const AccountDetailsScreen: React.FC = () => {
           <button
             onClick={() => setShowSignalsModal(true)}
             className="px-3 py-2 text-xs font-bold text-[#091540] bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer"
-            title={`Refresh buyer signals for ${account.name} and notify ${account.owner.split('(')[0].trim()}, Mahesh & Srini`}
+            title={`Refresh buyer signals for ${account.name} and notify ${account.owner.split('(')[0].trim()} and leadership`}
           >
             <Lucide.Radio className="w-3.5 h-3.5 text-amber-600 animate-pulse" />
             <span>Refresh Signals</span>
@@ -313,8 +313,8 @@ export const AccountDetailsScreen: React.FC = () => {
               key={tab.key}
               onClick={() => navigate('accounts', account.id, tab.key)}
               className={`px-4.5 py-2.5 text-xs font-bold rounded-lg transition-all cursor-pointer flex items-center gap-2 ${isActive
-                  ? 'bg-[#091540] text-white shadow-xs'
-                  : 'text-gray-400 hover:text-gray-900 hover:bg-slate-50'
+                ? 'bg-[#091540] text-white shadow-xs'
+                : 'text-gray-400 hover:text-gray-900 hover:bg-slate-50'
                 }`}
             >
               {Icon && <Icon className="w-3.5 h-3.5" />}
@@ -449,8 +449,8 @@ export const AccountDetailsScreen: React.FC = () => {
                           key={d}
                           onClick={() => setSelectedDepth(d)}
                           className={`px-3 py-1 text-xs font-bold rounded-md transition-all cursor-pointer ${selectedDepth === d
-                              ? 'bg-[#091540] text-white'
-                              : 'bg-white border border-gray-200 text-gray-500 hover:text-gray-900'
+                            ? 'bg-[#091540] text-white'
+                            : 'bg-white border border-gray-200 text-gray-500 hover:text-gray-900'
                             }`}
                         >
                           {d}
@@ -601,8 +601,8 @@ export const AccountDetailsScreen: React.FC = () => {
                           key={step.id}
                           onClick={() => setActiveModuleId(step.id)}
                           className={`w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-3 cursor-pointer ${isSelected
-                              ? 'bg-slate-55 border-slate-300 text-slate-900 shadow-xs ring-1 ring-slate-150'
-                              : 'bg-white border-transparent hover:bg-slate-50 text-gray-600'
+                            ? 'bg-slate-55 border-slate-300 text-slate-900 shadow-xs ring-1 ring-slate-150'
+                            : 'bg-white border-transparent hover:bg-slate-50 text-gray-600'
                             }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
@@ -954,10 +954,10 @@ export const AccountDetailsScreen: React.FC = () => {
                                     <div className="flex flex-wrap items-center justify-between gap-2">
                                       <span className="text-[10px] font-mono font-bold text-gray-400">{item.date} • {item.source}</span>
                                       <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${item.sentiment === 'Positive'
-                                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                                          : item.sentiment === 'Negative'
-                                            ? 'bg-rose-50 text-rose-700 border border-rose-100'
-                                            : 'bg-slate-50 text-slate-700 border border-slate-150'
+                                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                                        : item.sentiment === 'Negative'
+                                          ? 'bg-rose-50 text-rose-700 border border-rose-100'
+                                          : 'bg-slate-50 text-slate-700 border border-slate-150'
                                         }`}>
                                         {item.sentiment} Sentiment
                                       </span>
@@ -1100,8 +1100,8 @@ export const AccountDetailsScreen: React.FC = () => {
                                         <h4 className="font-black text-gray-900 text-sm">{p.priority}</h4>
                                       </div>
                                       <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${p.impactLevel === 'High'
-                                          ? 'bg-rose-50 text-rose-700'
-                                          : 'bg-blue-50 text-blue-700'
+                                        ? 'bg-rose-50 text-rose-700'
+                                        : 'bg-blue-50 text-blue-700'
                                         }`}>
                                         {p.impactLevel} Impact
                                       </span>
@@ -1140,7 +1140,7 @@ export const AccountDetailsScreen: React.FC = () => {
                                   </span>
                                 </div>
                                 <p className="text-[11px] text-slate-500">
-                                  Discovered signals automatically dispatch priority alerts to <span className="font-semibold text-slate-700">{account.owner.split('(')[0].trim()}</span>, <span className="font-semibold text-slate-700">mahesh@intellifysolutions.com</span>, and <span className="font-semibold text-slate-700">srini@intellifysolutions.com</span>.
+                                  Discovered signals automatically dispatch priority alerts to <span className="font-semibold text-slate-700">{account.owner.split('(')[0].trim()}</span> and Indus Health Plus leadership (<span className="font-semibold text-slate-700">shailesh.thakare@indushealthplus.com, shashaank.d@indushealthplus.com, balaji.hadole@indushealthplus.com, samarth.patki@indushealthplus.com</span>).
                                 </p>
                               </div>
                               <button
@@ -1164,8 +1164,8 @@ export const AccountDetailsScreen: React.FC = () => {
                                         <span className="font-black text-gray-800 text-sm">Intent Highlight</span>
                                       </div>
                                       <span className={`px-2.5 py-0.5 rounded text-[9px] font-black uppercase tracking-wider font-mono ${s.urgency === 'Immediate'
-                                          ? 'bg-rose-50 text-rose-700 border border-rose-100'
-                                          : 'bg-amber-50 text-amber-700 border border-amber-100'
+                                        ? 'bg-rose-50 text-rose-700 border border-rose-100'
+                                        : 'bg-amber-50 text-amber-700 border border-amber-100'
                                         }`}>
                                         {s.urgency} Action
                                       </span>
@@ -1363,7 +1363,7 @@ export const AccountDetailsScreen: React.FC = () => {
                             <div className="space-y-3 pt-1">
                               <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Recommended Indus Health Plus Services</span>
                               <div className="flex flex-wrap gap-2">
-                                {d.recommendedIntellifyServices?.map((srv: string, idx: number) => (
+                                {d.recommendedIndusServices?.map((srv: string, idx: number) => (
                                   <span key={idx} className="px-3 py-1.5 bg-[#091540] text-white font-bold rounded-lg text-[10.5px]">
                                     {srv}
                                   </span>
@@ -1530,10 +1530,10 @@ export const AccountDetailsScreen: React.FC = () => {
                             {/* Influence */}
                             <td className="px-6 py-4 text-center">
                               <span className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${stk.influence === 'High'
-                                  ? 'text-rose-700 bg-rose-50'
-                                  : stk.influence === 'Medium'
-                                    ? 'text-amber-700 bg-amber-50'
-                                    : 'text-slate-600 bg-slate-100'
+                                ? 'text-rose-700 bg-rose-50'
+                                : stk.influence === 'Medium'
+                                  ? 'text-amber-700 bg-amber-50'
+                                  : 'text-slate-600 bg-slate-100'
                                 }`}>
                                 {stk.influence} Influence
                               </span>
@@ -1765,8 +1765,8 @@ Indus Health Plus Account Intelligence`}
                   type="button"
                   onClick={() => setStkForm(prev => ({ ...prev, inputMethod: 'linkedin' }))}
                   className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${stkForm.inputMethod === 'linkedin'
-                      ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
-                      : 'text-gray-500 hover:text-gray-800'
+                    ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
+                    : 'text-gray-500 hover:text-gray-800'
                     }`}
                 >
                   Method 1: LinkedIn URL Analysis
@@ -1775,8 +1775,8 @@ Indus Health Plus Account Intelligence`}
                   type="button"
                   onClick={() => setStkForm(prev => ({ ...prev, inputMethod: 'manual' }))}
                   className={`flex-1 py-1.5 text-center rounded-lg text-xs font-bold transition-all ${stkForm.inputMethod === 'manual'
-                      ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
-                      : 'text-gray-500 hover:text-gray-800'
+                    ? 'bg-white text-[#091540] shadow-2xs border border-gray-200/40'
+                    : 'text-gray-500 hover:text-gray-800'
                     }`}
                 >
                   Method 2: Manual Entry

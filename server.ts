@@ -356,12 +356,12 @@ CRITICAL RULE FOR DATA INTEGRITY: If you cannot find any verified, reliable publ
             keyRisks: { type: Type.ARRAY, items: { type: Type.STRING } },
             keyOpportunities: { type: Type.ARRAY, items: { type: Type.STRING } },
             recommendedStrategy: { type: Type.STRING },
-            recommendedIntellifyServices: { type: Type.ARRAY, items: { type: Type.STRING } },
+            recommendedIndusServices: { type: Type.ARRAY, items: { type: Type.STRING } },
             overallConfidence: { type: Type.INTEGER }
           },
           required: [
             "businessSummary", "technologySummary", "currentInitiatives", "keyRisks",
-            "keyOpportunities", "recommendedStrategy", "recommendedIntellifyServices", "overallConfidence"
+            "keyOpportunities", "recommendedStrategy", "recommendedIndusServices", "overallConfidence"
           ]
         }
       },
@@ -477,12 +477,12 @@ Structure the output exactly according to the requested JSON format schema. Keep
         communicationStyle: { type: Type.STRING, description: "Must be one of: Executive, Business Focused, Technical, ROI Driven, Innovation Driven, Risk Focused, Operational, Unknown" },
         recommendedApproach: { type: Type.STRING },
         recommendedQuestions: { type: Type.ARRAY, items: { type: Type.STRING } },
-        recommendedIntellifySolutions: {
+        recommendedIndusSolutions: {
           type: Type.ARRAY,
           items: {
             type: Type.OBJECT,
             properties: {
-              solution: { type: Type.STRING, description: "Name of the Intellify solution (e.g. Microsoft Fabric, Power BI, Databricks, AI, etc.)" },
+              solution: { type: Type.STRING, description: "Name of the Indus Health Plus solution (e.g. Executive Health Checkups, Health Risk Assessment, Onsite Health Camps, Corporate Wellness, etc.)" },
               whyRelevant: { type: Type.STRING, description: "Specific context-aware reason for the recommendation" }
             },
             required: ["solution", "whyRelevant"]
@@ -535,7 +535,7 @@ Structure the output exactly according to the requested JSON format schema. Keep
       required: [
         "basicInformation", "roleAssessment", "likelyKPIs", "businessChallenges", "technologyFocus",
         "likelyPriorities", "communicationStyle", "recommendedApproach", "recommendedQuestions",
-        "recommendedIntellifySolutions", "confidence", "evidence", "influenceScore", "decisionPower",
+        "recommendedIndusSolutions", "confidence", "evidence", "influenceScore", "decisionPower",
         "engagementStrategy", "discoveryQuestions", "communicationPreview"
       ]
     };
@@ -576,11 +576,13 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
     const userRole = req.dbUser.role || 'member';
 
     // Single unified DB visibility rule:
-    // "All accounts should be visible to mahesh@intellifysolutions.com and srini@intellifysolutions.com and other users should be able to share accounts with each other."
+    // All accounts are visible to Indus Health Plus leadership and platform administrators.
     const isGlobalViewer =
-      userEmail === 'mahesh@intellifysolutions.com' ||
-      userEmail === 'srini@intellifysolutions.com' ||
-      userEmail === 'mpbalshetwar@gmail.com' ||
+      userEmail === 'shailesh.thakare@indushealthplus.com' ||
+      userEmail === 'shashaank.d@indushealthplus.com' ||
+      userEmail === 'balaji.hadole@indushealthplus.com' ||
+      userEmail === 'samarth.patki@indushealthplus.com' ||
+      userEmail === 'ecomm.indus@gmail.com' ||
       userRole === 'admin';
 
     // 1. Fetch all accounts from the single database
@@ -589,7 +591,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
     // Filter accounts visible to this user
     let visibleAccounts: (typeof schema.accounts.$inferSelect)[];
     if (isGlobalViewer) {
-      // Mahesh, Srini, and Admins see ALL accounts across the organization
+      // Indus Health Plus Leadership and Admins see ALL accounts across the organization
       visibleAccounts = allAccounts;
     } else {
       // Standard members see:
@@ -651,15 +653,18 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
     const allTemplates = await db.select().from(schema.templates);
     const templatesData = allTemplates.length > 0 ? allTemplates : await db.select().from(schema.templates).where(eq(schema.templates.userId, userId));
 
-    // 9. Notifications - Strictly filtered: Market signals are informed ONLY to account owners of Intellify, Mahesh, and Srini
+    // 9. Notifications - Strictly filtered: Market signals are informed to account owners and Indus Health Plus leadership
     const allNotifications = await db.select().from(schema.notifications);
     const notificationsData = allNotifications.filter((n) => {
       // If it's a market signal notification
       if (n.type === 'signal' || (n.title && n.title.includes('Signals'))) {
         const isLeadership =
-          userEmail === 'mahesh@intellifysolutions.com' ||
-          userEmail === 'srini@intellifysolutions.com' ||
-          userEmail === 'mpbalshetwar@gmail.com';
+          userEmail === 'shailesh.thakare@indushealthplus.com' ||
+          userEmail === 'shashaank.d@indushealthplus.com' ||
+          userEmail === 'balaji.hadole@indushealthplus.com' ||
+          userEmail === 'samarth.patki@indushealthplus.com' ||
+          userEmail === 'ecomm.indus@gmail.com' ||
+          userRole === 'admin';
         if (isLeadership) return true;
 
         // Check explicit recipients array if present
@@ -668,7 +673,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
           if (recs.includes(userEmail)) return true;
         }
 
-        // Check if user is the Intellify Account Owner for this account
+        // Check if user is the Indus Health Plus Account Owner for this account
         if (n.accountId) {
           const acc = allAccounts.find(a => a.id === n.accountId);
           if (acc) {
@@ -761,9 +766,11 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
     const userRole = req.dbUser.role || 'member';
 
     const isGlobalViewer =
-      userEmail === 'mahesh@intellifysolutions.com' ||
-      userEmail === 'srini@intellifysolutions.com' ||
-      userEmail === 'mpbalshetwar@gmail.com' ||
+      userEmail === 'shailesh.thakare@indushealthplus.com' ||
+      userEmail === 'shashaank.d@indushealthplus.com' ||
+      userEmail === 'balaji.hadole@indushealthplus.com' ||
+      userEmail === 'samarth.patki@indushealthplus.com' ||
+      userEmail === 'ecomm.indus@gmail.com' ||
       userRole === 'admin';
 
     const isCreator = currentAccount.userId === req.dbUser.id ||
@@ -1152,8 +1159,8 @@ app.put("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) => 
     const targetUser = existing[0];
 
     // Protect primary owner from being demoted or suspended or email changed
-    if (targetUser.email.toLowerCase() === "mpbalshetwar@gmail.com") {
-      if (email && email.toLowerCase().trim() !== "mpbalshetwar@gmail.com") {
+    if (targetUser.email.toLowerCase() === "samarth.patki@indushealthplus.com") {
+      if (email && email.toLowerCase().trim() !== "samarth.patki@indushealthplus.com") {
         return res.status(403).json({ error: "The primary platform owner email address cannot be changed." });
       }
       if (role && role !== 'admin') {
@@ -1237,7 +1244,7 @@ app.delete("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) 
 
     // Protect primary admin from deletion
     const existing = await db.select().from(schema.allowedUsers).where(eq(schema.allowedUsers.id, id));
-    if (existing.length > 0 && existing[0].email === "mpbalshetwar@gmail.com") {
+    if (existing.length > 0 && existing[0].email === "samarth.patki@indushealthplus.com") {
       return res.status(403).json({ error: "The primary platform owner cannot be removed." });
     }
 
@@ -1255,12 +1262,11 @@ async function seedDefaultAllowedUsers() {
     if (existing.length === 0) {
       console.log("[Access Control] Seeding initial authorized team members...");
       await db.insert(schema.allowedUsers).values([
-        { email: 'mpbalshetwar@gmail.com', name: 'Platform Admin', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'intellifysol@gmail.com', name: 'Intellify Admin', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'mahesh@intellifysolutions.com', name: 'Mahesh', role: 'admin', status: 'active', addedBy: 'mpbalshetwar@gmail.com' },
-        { email: 'srini@intellifysolutions.com', name: 'Srini', role: 'admin', status: 'active', addedBy: 'mpbalshetwar@gmail.com' },
-        { email: 'ketan.g@intellifysolutions.com', name: 'Ketan G', role: 'member', status: 'active', addedBy: 'mpbalshetwar@gmail.com' },
-        { email: 'mrunal@intellifysolutions.com', name: 'Mrunal', role: 'member', status: 'active', addedBy: 'mpbalshetwar@gmail.com' }
+        { email: 'shailesh.thakare@indushealthplus.com', name: 'Shailesh Thakare', role: 'admin', status: 'active', addedBy: 'system' },
+        { email: 'shashaank.d@indushealthplus.com', name: 'Shashaank D', role: 'admin', status: 'active', addedBy: 'system' },
+        { email: 'balaji.hadole@indushealthplus.com', name: 'Balaji Hadole', role: 'admin', status: 'active', addedBy: 'system' },
+        { email: 'samarth.patki@indushealthplus.com', name: 'Samarth Patki', role: 'admin', status: 'active', addedBy: 'system' },
+        { email: 'ecomm.indus@gmail.com', name: 'Indus Admin', role: 'admin', status: 'active', addedBy: 'system' }
       ]);
       console.log("[Access Control] Seeded initial authorized users successfully.");
     }

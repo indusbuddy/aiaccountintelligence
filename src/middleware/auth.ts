@@ -10,11 +10,10 @@ export interface AuthRequest extends Request {
 }
 
 export const BASELINE_ALLOWED_EMAILS = [
-  'mpbalshetwar@gmail.com',
-  'mahesh@intellifysolutions.com',
-  'srini@intellifysolutions.com',
-  'ketan.g@intellifysolutions.com',
-  'mrunal@intellifysolutions.com',
+  'shailesh.thakare@indushealthplus.com',
+  'shashaank.d@indushealthplus.com',
+  'balaji.hadole@indushealthplus.com',
+  'samarth.patki@indushealthplus.com',
   'ecomm.indus@gmail.com'
 ];
 
@@ -73,7 +72,13 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
       });
     }
 
-    const defaultAdmins = ['mpbalshetwar@gmail.com', 'mahesh@intellifysolutions.com', 'srini@intellifysolutions.com', 'ecomm.indus@gmail.com'];
+    const defaultAdmins = [
+      'shailesh.thakare@indushealthplus.com',
+      'shashaank.d@indushealthplus.com',
+      'balaji.hadole@indushealthplus.com',
+      'samarth.patki@indushealthplus.com',
+      'ecomm.indus@gmail.com'
+    ];
     const role = allowedList[0]?.role || (defaultAdmins.includes(email) || email.includes('admin') || isIndusDomain ? 'admin' : 'member');
 
     req.dbUser = { id: uid, uid, email, role };

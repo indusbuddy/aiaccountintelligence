@@ -398,7 +398,7 @@ export const exportCompanyResearchPDF = (account: Account, research: Orchestrate
         `Active Initiatives: ${d.executive.currentInitiatives.join('; ')}`,
         `Critical Risks & Friction: ${d.executive.keyRisks.join('; ')}`,
         `Target Opportunities: ${d.executive.keyOpportunities.join('; ')}`,
-        `Recommended Indus Health Plus Services: ${d.executive.recommendedIntellifyServices.join(', ')}`
+        `Recommended Indus Health Plus Services: ${(d.executive.recommendedIndusServices || []).join(', ')}`
       ]);
     } else {
       addText("Executive recommendations currently pending.", 10, 'italic');
@@ -661,9 +661,9 @@ export const exportStakeholderResearchPDF = (stakeholder: Stakeholder, account: 
   }
 
   // Solutions Alignment
-  if (intel.recommendedIntellifySolutions && intel.recommendedIntellifySolutions.length > 0) {
+  if (intel.recommendedIndusSolutions && intel.recommendedIndusSolutions.length > 0) {
     addSectionHeader("Recommended Offerings & Solutions");
-    intel.recommendedIntellifySolutions.forEach(s => {
+    intel.recommendedIndusSolutions.forEach(s => {
       drawCard(s.solution, [
         `Relevance Strategy: ${s.whyRelevant}`
       ]);

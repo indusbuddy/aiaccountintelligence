@@ -49,7 +49,7 @@ export const DashboardScreen: React.FC = () => {
           <button
             onClick={() => setShowSignalsModal(true)}
             className="inline-flex items-center justify-center px-3.5 py-2 text-xs font-bold text-[#091540] bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg shadow-2xs transition-all duration-200 cursor-pointer gap-1.5"
-            title="Refresh all accounts for new market signals and notify respective account owners, Mahesh & Srini"
+            title="Refresh all accounts for new market signals and notify respective account owners and leadership"
           >
             <Lucide.Radio className="w-4 h-4 text-amber-600 animate-pulse" />
             <span>Refresh Signals & Notify</span>
@@ -105,7 +105,7 @@ export const DashboardScreen: React.FC = () => {
 
       {/* Bento Grid Analytics Console */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        
+
         {/* BLOCK 1: Opportunity Index & Heatmap (lg:col-span-7) */}
         <div className="lg:col-span-7 flex flex-col h-full">
           <SectionCard
@@ -114,7 +114,7 @@ export const DashboardScreen: React.FC = () => {
             subtitle="Commercial suitability mapping against organizational AI alignment score."
             className="flex-1 flex flex-col justify-between"
             headerActions={
-              <button 
+              <button
                 onClick={() => navigate('accounts')}
                 className="text-xs font-bold text-[#2563FF] hover:text-[#0c44dd] flex items-center gap-1 transition-colors cursor-pointer"
               >
@@ -128,8 +128,8 @@ export const DashboardScreen: React.FC = () => {
               ) : (
                 <div className="space-y-3.5">
                   {topOpportunities.map((acc) => (
-                    <div 
-                      key={acc.id} 
+                    <div
+                      key={acc.id}
                       onClick={() => navigate('accounts', acc.id, 'overview')}
                       className="group p-3.5 bg-slate-50/70 hover:bg-[#2563FF]/5 border border-slate-100 hover:border-[#2563FF]/20 rounded-2xl cursor-pointer transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                     >
@@ -210,27 +210,27 @@ export const DashboardScreen: React.FC = () => {
             className="flex-1 flex flex-col justify-between"
           >
             <div className="flex flex-col gap-6 h-full justify-between">
-              
+
               {/* Top Row: Visual circular gauge + metrics legend */}
               <div className="grid grid-cols-1 sm:grid-cols-12 gap-5 items-center">
-                
+
                 {/* Gauge (5 cols) */}
                 <div className="sm:col-span-5 flex justify-center">
                   <div className="relative w-32 h-32 flex items-center justify-center">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                       <circle cx="50" cy="50" r="41" className="stroke-slate-50 fill-none" strokeWidth="8" />
-                      <circle 
-                        cx="50" cy="50" r="41" 
-                        className="stroke-[#2563FF] fill-none transition-all duration-1000 ease-out" 
-                        strokeWidth="8" 
-                        strokeDasharray="257.6" 
+                      <circle
+                        cx="50" cy="50" r="41"
+                        className="stroke-[#2563FF] fill-none transition-all duration-1000 ease-out"
+                        strokeWidth="8"
+                        strokeDasharray="257.6"
                         strokeDashoffset={257.6 - (257.6 * (researchCompleted / (totalAccounts || 1)))}
                       />
-                      <circle 
-                        cx="50" cy="50" r="41" 
-                        className="stroke-amber-400 fill-none transition-all duration-1000 ease-out" 
-                        strokeWidth="8" 
-                        strokeDasharray="257.6" 
+                      <circle
+                        cx="50" cy="50" r="41"
+                        className="stroke-amber-400 fill-none transition-all duration-1000 ease-out"
+                        strokeWidth="8"
+                        strokeDasharray="257.6"
                         strokeDashoffset={257.6 - (257.6 * ((researchCompleted + researchInProgress) / (totalAccounts || 1)))}
                         style={{ opacity: 0.3 }}
                       />
@@ -332,7 +332,7 @@ export const DashboardScreen: React.FC = () => {
                   key={task.id}
                   className="p-3 bg-slate-50/70 border border-slate-100 rounded-2xl hover:border-[#2563FF]/20 hover:bg-white transition-all duration-200 flex items-start gap-3 shadow-xs"
                 >
-                  <button 
+                  <button
                     onClick={() => alert(`Task marked completed: ${task.title}`)}
                     className="mt-0.5 w-4 h-4 rounded border border-slate-300 hover:border-[#2563FF] hover:bg-[#2563FF]/10 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
                     title="Mark task completed"
@@ -350,11 +350,10 @@ export const DashboardScreen: React.FC = () => {
                       <span className="inline-flex items-center px-2 py-0.2 rounded text-[9px] font-bold bg-white border border-slate-150 text-gray-400 font-mono">
                         {task.due}
                       </span>
-                      <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-bold border font-mono ${
-                        task.priority === 'High' 
-                          ? 'bg-rose-50 text-rose-600 border-rose-100' 
+                      <span className={`inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-bold border font-mono ${task.priority === 'High'
+                          ? 'bg-rose-50 text-rose-600 border-rose-100'
                           : 'bg-amber-50 text-amber-600 border-amber-100'
-                      }`}>
+                        }`}>
                         {task.priority}
                       </span>
                     </div>

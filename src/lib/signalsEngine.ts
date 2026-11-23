@@ -28,14 +28,15 @@ export interface RefreshSignalsSummary {
 
 // Fixed leadership emails specified in requirements
 export const LEADERSHIP_EMAILS = [
-  'mahesh@intellifysolutions.com',
-  'srini@intellifysolutions.com',
-  'mpbalshetwar@gmail.com'
+  'shailesh.thakare@indushealthplus.com',
+  'shashaank.d@indushealthplus.com',
+  'balaji.hadole@indushealthplus.com',
+  'samarth.patki@indushealthplus.com'
 ];
 
 /**
  * Derives a clean email address from an owner string
- * e.g. "Sarah Jenkins (Enterprise Sales Director)" -> "sarah.jenkins@intellifysolutions.com"
+ * e.g. "Sarah Jenkins (Enterprise Sales Director)" -> "sarah.jenkins@indushealthplus.com"
  */
 export function deriveOwnerEmail(owner: string, createdByEmail?: string): string {
   if (owner) {
@@ -47,11 +48,11 @@ export function deriveOwnerEmail(owner: string, createdByEmail?: string): string
     const namePart = owner.split('(')[0].trim().toLowerCase();
     const parts = namePart.split(/\s+/).filter(Boolean);
     if (parts.length >= 2) {
-      return `${parts[0]}.${parts[parts.length - 1]}@intellifysolutions.com`;
+      return `${parts[0]}.${parts[parts.length - 1]}@indushealthplus.com`;
     } else if (parts.length === 1 && parts[0].includes('@')) {
       return parts[0].toLowerCase().trim();
     } else if (parts.length === 1 && parts[0] !== 'unassigned' && parts[0] !== 'team') {
-      return `${parts[0]}@intellifysolutions.com`;
+      return `${parts[0]}@indushealthplus.com`;
     }
   }
 
@@ -59,7 +60,7 @@ export function deriveOwnerEmail(owner: string, createdByEmail?: string): string
     return createdByEmail.toLowerCase().trim();
   }
 
-  return 'owner@intellifysolutions.com';
+  return 'owner@indushealthplus.com';
 }
 
 export function extractOwnerDisplayName(owner: string): string {
@@ -68,7 +69,7 @@ export function extractOwnerDisplayName(owner: string): string {
 }
 
 /**
- * Checks if a specific user email belongs to the Intellify account owner
+ * Checks if a specific user email belongs to the Indus Health Plus account owner
  */
 export function isUserAccountOwner(account: Account, userEmail?: string | null): boolean {
   if (!userEmail) return false;
@@ -81,7 +82,7 @@ export function isUserAccountOwner(account: Account, userEmail?: string | null):
 }
 
 /**
- * Strict authorization check: Market signals are informed to ONLY account owners of Intellify, Mahesh, and Srini.
+ * Strict authorization check: Market signals are informed to account owners and Indus Health Plus leadership.
  */
 export function isAuthorizedForMarketSignals(
   userEmail: string | undefined | null,
@@ -91,12 +92,8 @@ export function isAuthorizedForMarketSignals(
   if (!userEmail) return false;
   const email = userEmail.toLowerCase().trim();
 
-  // 1. Mahesh and Srini are always informed
-  if (
-    email === 'mahesh@intellifysolutions.com' ||
-    email === 'srini@intellifysolutions.com' ||
-    email === 'mpbalshetwar@gmail.com'
-  ) {
+  // 1. Leadership emails are always informed
+  if (LEADERSHIP_EMAILS.includes(email) || email === 'ecomm.indus@gmail.com') {
     return true;
   }
 
@@ -108,7 +105,7 @@ export function isAuthorizedForMarketSignals(
     targetAccount = accounts.find(a => a.id === accountOrAccountId);
   }
 
-  // 3. Must be the specific account owner of Intellify
+  // 3. Must be the specific account owner
   if (targetAccount) {
     return isUserAccountOwner(targetAccount, email);
   }
@@ -126,7 +123,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Enterprise Copilot ROI pushback: C-suite demands verifiable productivity telemetry and domain-specific micro-agent orchestrations.',
       urgency: 'Immediate',
       confidence: 96,
-      businessImpact: 'Massive opening for Intellify Copilot Value Tracker & custom agentic evaluation accelerators.',
+      businessImpact: 'Massive opening for Indus Health Plus Corporate Health & Employee Wellness evaluation accelerators.',
       evidence: [
         { source: 'Gartner Enterprise Tech Buyer Sentiment (Q3)', credibility: 'High' },
         { source: 'Microsoft Executive Partner Briefing Notes', credibility: 'High' }
@@ -136,7 +133,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Active RFP announced for Azure Fabric Lakehouse consolidation to replace legacy on-prem Cloudera clusters.',
       urgency: 'Immediate',
       confidence: 94,
-      businessImpact: 'Position Intellify Data Modernization practice for multi-million dollar data lake re-architecture.',
+      businessImpact: 'Position Indus Health Plus Digital Health & Corporate Health Checkup advisory.',
       evidence: [
         { source: 'Azure Partner Network RFP Bulletin', credibility: 'High' }
       ]
@@ -145,7 +142,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'EU Sovereign Cloud mandate triggers architectural compliance review across 14 enterprise customer tenants.',
       urgency: 'High',
       confidence: 91,
-      businessImpact: 'Enables Intellify Sovereign Cloud & Zero-Trust security compliance advisory packaging.',
+      businessImpact: 'Enables Indus Health Plus Occupational Health & Compliance advisory packaging.',
       evidence: [
         { source: 'EU Digital Markets Compliance Audit', credibility: 'High' }
       ]
@@ -156,7 +153,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Direct-to-Consumer (D2C) logistics realignment: Nike announces $180M digital supply chain & real-time inventory allocation modernization.',
       urgency: 'Immediate',
       confidence: 95,
-      businessImpact: 'High-value opportunity to deploy Intellify Demand Sensing & Predictive Fulfillment AI accelerators.',
+      businessImpact: 'High-value opportunity to deploy Indus Health Plus Corporate Wellness & Occupational Health programs.',
       evidence: [
         { source: 'Nike Q4 Investor Earnings Transcript', credibility: 'High' },
         { source: 'Supply Chain Dive Procurement Signal', credibility: 'High' }
@@ -166,7 +163,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Chief Information Officer open requisitions for 18 Computer Vision & Edge AI engineers for automated distribution centers.',
       urgency: 'High',
       confidence: 92,
-      businessImpact: 'Pitch Intellify Edge AI & Industrial Automation engineering augmentation team.',
+      businessImpact: 'Pitch Indus Health Plus Employee Preventive Care & Annual Executive Health Screening packages.',
       evidence: [
         { source: 'Nike Careers & LinkedIn Talent Insights', credibility: 'High' }
       ]
@@ -186,7 +183,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'FDA digital submission compliance sprint: Pfizer accelerates AI-assisted clinical trial protocol authoring and validation.',
       urgency: 'Immediate',
       confidence: 97,
-      businessImpact: 'Deploy Intellify Clinical AI Documentation Pipeline with validated auditability benchmarks.',
+      businessImpact: 'Deploy Indus Health Plus Corporate Wellness & Diagnostic Telemetry benchmarks.',
       evidence: [
         { source: 'FDA Regulatory Telemetry Update', credibility: 'High' },
         { source: 'Pfizer Global R&D Technology Summit', credibility: 'High' }
@@ -196,7 +193,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Biopharma R&D data silo consolidation: Initiative launched to integrate clinical data from 6 acquired biotech portfolios.',
       urgency: 'High',
       confidence: 93,
-      businessImpact: 'Multi-year data mesh & life-sciences metadata governance opportunity for Intellify.',
+      businessImpact: 'Multi-year healthcare analytics and preventive medicine collaboration opportunity for Indus Health Plus.',
       evidence: [
         { source: 'Bio-IT World Technology Review', credibility: 'High' }
       ]
@@ -207,7 +204,7 @@ const SIGNAL_LIBRARY: Record<string, BuyingSignal[]> = {
       signal: 'Target accelerates Omnichannel Margin Optimization program to curb shrink and streamline pick-and-pack fulfillment.',
       urgency: 'Immediate',
       confidence: 94,
-      businessImpact: 'Deliver Intellify Smart Inventory & Automated Shrink Prediction AI models.',
+      businessImpact: 'Deliver Indus Health Plus Employee Well-Being & Wellness Analytics programs.',
       evidence: [
         { source: 'Target Corp Q2 Financial Filing (10-Q)', credibility: 'High' }
       ]
@@ -234,7 +231,7 @@ function generateDynamicSignalsForAccount(account: Account): BuyingSignal[] {
       signal: `Executive leadership at ${name} greenlights strategic modernization initiative to eliminate legacy operational bottlenecks in ${industry}.`,
       urgency: 'Immediate',
       confidence: 92,
-      businessImpact: `Immediate consultative entry point for Intellify ${industry} Digital Transformation & AI Automation accelerators.`,
+      businessImpact: `Immediate consultative entry point for Indus Health Plus ${industry} Corporate Health & Wellness programs.`,
       evidence: [
         { source: `${name} Investor Communications & Press Releases`, credibility: 'High' },
         { source: 'TechTarget Enterprise Purchase Intent Radar', credibility: 'High' }
@@ -244,7 +241,7 @@ function generateDynamicSignalsForAccount(account: Account): BuyingSignal[] {
       signal: `Hiring surge detected: Multiple senior postings for Cloud Data Architects, AI/ML Engineers, and Enterprise Platform Integration specialists.`,
       urgency: 'High',
       confidence: 88,
-      businessImpact: `Position Intellify Expert Augmentation and Rapid Delivery Pods to bridge resource bandwidth gaps.`,
+      businessImpact: `Position Indus Health Plus Pre-employment Health Checks & Corporate Wellness programs for scaling teams.`,
       evidence: [
         { source: 'LinkedIn Talent Intelligence & Corporate Career Portal', credibility: 'High' }
       ]
@@ -292,7 +289,7 @@ export function createAccountSignalDispatch(
   const newScore = Math.min(99, account.opportunityScore + scoreDelta);
 
   const topSignal = signals[0]?.signal || 'High-urgency buyer intent spike detected.';
-  const summary = `Detected ${signals.length} fresh market signals. Informed exclusively to Intellify Account Owner ${ownerName} (${ownerEmail}), Mahesh, and Srini.`;
+  const summary = `Detected ${signals.length} fresh market signals. Informed to Account Owner ${ownerName} (${ownerEmail}) and Indus Health Plus leadership.`;
 
   return {
     accountId: account.id,
@@ -328,7 +325,7 @@ export function generateEmailDigestText(dispatches: SignalDispatchResult[]): str
     text += `[${idx + 1}] TARGET ACCOUNT: ${d.accountName}\n`;
     text += `-----------------------------------------------------------\n`;
     text += `• Account Owner: ${d.ownerName} <${d.ownerEmail}>\n`;
-    text += `• Leadership Dispatched: Mahesh Balshetwar & Srini\n`;
+    text += `• Leadership Dispatched: ${LEADERSHIP_EMAILS.join(', ')}\n`;
     text += `• Updated Opportunity Score: ${d.newScore} (+${d.scoreDelta} momentum pts)\n`;
     text += `• Fresh Buying Signals Discovered:\n`;
 

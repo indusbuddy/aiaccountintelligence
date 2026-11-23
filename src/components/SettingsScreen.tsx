@@ -134,7 +134,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
 
   // Quick 1-click status toggle
   const handleToggleStatus = async (item: AllowedUser) => {
-    if (item.email === 'mpbalshetwar@gmail.com') {
+    if (item.email === 'samarth.patki@indushealthplus.com') {
       setActionMessage({ text: 'The primary platform owner cannot be suspended.', type: 'error' });
       setTimeout(() => setActionMessage(null), 3000);
       return;
@@ -160,7 +160,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
 
   // Quick 1-click role toggle
   const handleToggleRole = async (item: AllowedUser) => {
-    if (item.email === 'mpbalshetwar@gmail.com') {
+    if (item.email === 'samarth.patki@indushealthplus.com') {
       setActionMessage({ text: 'The primary platform owner must remain an Administrator.', type: 'error' });
       setTimeout(() => setActionMessage(null), 3000);
       return;
@@ -221,7 +221,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
   };
 
   const handleRemoveUser = async (id: number, email: string) => {
-    if (email === 'mpbalshetwar@gmail.com') {
+    if (email === 'samarth.patki@indushealthplus.com') {
       setActionMessage({ text: 'The primary platform owner cannot be removed.', type: 'error' });
       setTimeout(() => setActionMessage(null), 3000);
       return;
@@ -649,7 +649,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
               ) : (
                 filteredUsers.map((item) => {
                   const isInlineEditing = inlineEditingUserId === item.id;
-                  const isOwner = item.email === 'mpbalshetwar@gmail.com';
+                  const isOwner = item.email === 'samarth.patki@indushealthplus.com';
 
                   return (
                     <div
@@ -922,14 +922,14 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
                       <input
                         type="email"
                         required
-                        disabled={modalUser.email === 'mpbalshetwar@gmail.com'}
+                        disabled={modalUser.email === 'samarth.patki@indushealthplus.com'}
                         placeholder="user@company.com"
                         value={modalEmail}
                         onChange={(e) => setModalEmail(e.target.value)}
                         className="w-full pl-9 pr-3.5 py-2.5 text-xs border border-gray-200 rounded-xl bg-slate-50/50 focus:bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-hidden font-mono text-gray-800 disabled:opacity-60"
                       />
                     </div>
-                    {modalUser.email === 'mpbalshetwar@gmail.com' && (
+                    {modalUser.email === 'samarth.patki@indushealthplus.com' && (
                       <p className="text-[10px] text-purple-600 font-semibold mt-1">
                         Primary account owner email is locked for platform security.
                       </p>
@@ -945,12 +945,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
                       <button
                         type="button"
                         onClick={() => setModalRole('member')}
-                        disabled={modalUser.email === 'mpbalshetwar@gmail.com'}
+                        disabled={modalUser.email === 'samarth.patki@indushealthplus.com'}
                         className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           modalRole === 'member'
                             ? 'border-[#2563FF] bg-blue-50/50 ring-2 ring-blue-500/20'
                             : 'border-gray-200 hover:bg-slate-50'
-                        } ${modalUser.email === 'mpbalshetwar@gmail.com' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        } ${modalUser.email === 'samarth.patki@indushealthplus.com' ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-[#091540]">Member</span>
@@ -1008,12 +1008,12 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ initialTab = 'us
                       <button
                         type="button"
                         onClick={() => setModalStatus('suspended')}
-                        disabled={modalUser.email === 'mpbalshetwar@gmail.com'}
+                        disabled={modalUser.email === 'samarth.patki@indushealthplus.com'}
                         className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                           modalStatus === 'suspended'
                             ? 'border-rose-500 bg-rose-50/50 ring-2 ring-rose-500/20'
                             : 'border-gray-200 hover:bg-slate-50'
-                        } ${modalUser.email === 'mpbalshetwar@gmail.com' ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        } ${modalUser.email === 'samarth.patki@indushealthplus.com' ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <div className="flex items-center justify-between">
                           <span className="text-xs font-bold text-rose-800">Suspended</span>

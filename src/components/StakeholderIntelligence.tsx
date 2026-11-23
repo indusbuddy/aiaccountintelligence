@@ -58,7 +58,7 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       "How is Microsoft aligning global partner incentives to accelerate co-sell motions around Microsoft Fabric?",
       "What are the primary friction points your enterprise teams encounter when trying to scale Azure OpenAI pilots into production?"
     ],
-    recommendedIntellifySolutions: [
+    recommendedIndusSolutions: [
       { solution: "Microsoft Fabric Assessment", whyRelevant: "Directly aligns with Judson's focus on accelerating Synapse and data modernization to power downstream AI applications." },
       { solution: "AI Migration Accelerators", whyRelevant: "Helps Microsoft field sales teams unlock customer roadblocks, speeding up large Azure commitments." }
     ],
@@ -142,7 +142,7 @@ const PREDEFINED_INTELLIGENCE: Record<string, StakeholderIntelData> = {
       "How are you addressing data residency and compliance friction in the Microsoft Cloud for Financial Services?",
       "What are the primary architectural challenges you see partners run into with large-scale multi-tenant migrations?"
     ],
-    recommendedIntellifySolutions: [
+    recommendedIndusSolutions: [
       { solution: "Application Modernization Blueprint", whyRelevant: "Offers deep technical validation frameworks to safely migrate legacy systems to containerized cloud architectures." },
       { solution: "Managed Compliance Services", whyRelevant: "Provides ongoing security monitoring that fits Corey's need for strict regulatory governance in specialized industries." }
     ],
@@ -300,8 +300,8 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
             onClick={handleRunAIResearch}
             disabled={isResearching}
             className={`px-3.5 py-1.5 text-xs font-bold rounded-lg shadow-sm cursor-pointer inline-flex items-center gap-1.5 transition-all text-white ${isResearching
-                ? 'bg-[#091540]/60 cursor-not-allowed'
-                : 'bg-[#091540] hover:bg-[#182a74]'
+              ? 'bg-[#091540]/60 cursor-not-allowed'
+              : 'bg-[#091540] hover:bg-[#182a74]'
               }`}
           >
             <Lucide.Cpu className={`w-3.5 h-3.5 ${isResearching ? 'animate-spin' : ''}`} />
@@ -457,8 +457,8 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`flex items-center gap-1.5 px-4 py-2.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === tab.id
-                      ? 'bg-[#091540] text-white shadow-xs'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-slate-50'
+                    ? 'bg-[#091540] text-white shadow-xs'
+                    : 'text-gray-500 hover:text-gray-900 hover:bg-slate-50'
                     }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -756,7 +756,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                 )}
 
                 {/* ============================================== TAB: SOLUTION ALIGNMENT */}
-                {activeTab === 'solutions' && intel.recommendedIntellifySolutions && (
+                {activeTab === 'solutions' && intel.recommendedIndusSolutions && (
                   <div className="space-y-6">
                     <div className="border-b border-gray-50 pb-4">
                       <h3 className="text-sm font-extrabold text-[#091540]">Recommended Indus Health Plus Solutions Offerings</h3>
@@ -764,7 +764,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      {intel.recommendedIntellifySolutions.map((sol, i) => (
+                      {intel.recommendedIndusSolutions.map((sol, i) => (
                         <div key={i} className="border border-gray-100 rounded-xl p-5 shadow-2xs space-y-3 hover:shadow-xs transition-all bg-white">
                           <div className="flex items-center gap-2.5">
                             <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-100/50 flex items-center justify-center">

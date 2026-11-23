@@ -36,7 +36,7 @@ export const accounts = pgTable('accounts', {
   opportunityScore: integer('opportunity_score').notNull().default(0),
   lastUpdated: text('last_updated').notNull(),
   createdByEmail: text('created_by_email'),
-  sharedWith: jsonb('shared_with'), // Array of email strings, e.g. ["ketan.g@intellifysolutions.com"]
+  sharedWith: jsonb('shared_with'), // Array of email strings, e.g. ["samarth.patki@indushealthplus.com"]
 });
 
 // 3. Stakeholders table

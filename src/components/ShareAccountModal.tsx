@@ -42,7 +42,13 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
       setFeedback({ text: 'Please enter a valid email address.', type: 'error' });
       return;
     }
-    if (clean === 'mahesh@intellifysolutions.com' || clean === 'srini@intellifysolutions.com') {
+    const universalEmails = [
+      'shailesh.thakare@indushealthplus.com',
+      'shashaank.d@indushealthplus.com',
+      'balaji.hadole@indushealthplus.com',
+      'samarth.patki@indushealthplus.com'
+    ];
+    if (universalEmails.includes(clean)) {
       setFeedback({ text: `${clean} already has universal access to all accounts.`, type: 'success' });
       setCustomEmail('');
       return;
@@ -85,7 +91,14 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
   const availableTeamMembers = allowedUsersList.filter(u => {
     const email = u.email.toLowerCase();
     // Exclude executives who already see all accounts, the account creator, and already shared members
-    if (email === 'mahesh@intellifysolutions.com' || email === 'srini@intellifysolutions.com' || email === 'mpbalshetwar@gmail.com') return false;
+    const universalEmails = [
+      'shailesh.thakare@indushealthplus.com',
+      'shashaank.d@indushealthplus.com',
+      'balaji.hadole@indushealthplus.com',
+      'samarth.patki@indushealthplus.com',
+      'ecomm.indus@gmail.com'
+    ];
+    if (universalEmails.includes(email)) return false;
     if (account.createdByEmail && email === account.createdByEmail.toLowerCase()) return false;
     return !currentSharedList.includes(email);
   });
@@ -93,7 +106,7 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
       <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl border border-gray-150 overflow-hidden animate-scale-in">
-        
+
         {/* Modal Header */}
         <div className="px-6 py-4.5 bg-[#091540] text-white flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -123,11 +136,10 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
         <div className="p-6 space-y-5">
           {/* Feedback Toast */}
           {feedback && (
-            <div className={`p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${
-              feedback.type === 'success' 
-                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200' 
+            <div className={`p-3 rounded-xl text-xs font-semibold flex items-center gap-2 ${feedback.type === 'success'
+                ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                 : 'bg-rose-50 text-rose-800 border border-rose-200'
-            }`}>
+              }`}>
               {feedback.type === 'success' ? (
                 <Lucide.CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
               ) : (
@@ -144,9 +156,7 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
               <span>Universal Organization Visibility</span>
             </div>
             <p className="text-[11px] text-gray-600 leading-relaxed">
-              By company policy, all accounts in the database are visible to{' '}
-              <strong className="text-[#091540]">mahesh@intellifysolutions.com</strong> and{' '}
-              <strong className="text-[#091540]">srini@intellifysolutions.com</strong>, as well as platform administrators.
+              By company policy, all accounts in the database are visible to Indus Health Plus leadership (<strong className="text-[#091540]">shailesh.thakare@indushealthplus.com</strong>, <strong className="text-[#091540]">shashaank.d@indushealthplus.com</strong>, <strong className="text-[#091540]">balaji.hadole@indushealthplus.com</strong>, <strong className="text-[#091540]">samarth.patki@indushealthplus.com</strong>), as well as platform administrators.
             </p>
           </div>
 
@@ -183,7 +193,7 @@ export const ShareAccountModal: React.FC<ShareAccountModalProps> = ({ account, i
                 <Lucide.Mail className="w-4 h-4 absolute left-3 top-3 text-gray-400" />
                 <input
                   type="email"
-                  placeholder="colleague@intellifysolutions.com"
+                  placeholder="colleague@indushealthplus.com"
                   value={customEmail}
                   onChange={(e) => setCustomEmail(e.target.value)}
                   onKeyDown={(e) => {

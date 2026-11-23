@@ -503,7 +503,7 @@ export const MOCK_RESEARCH_TEMPLATES: Record<string, Research> = {
       'Active RFP for third-party consumer intelligence engines capable of synthesizing social listening with retail inventory trends.',
       'Launch of co-innovation labs in Beaverton designed to partner with early-stage digital retail startups.'
     ],
-    summary: 'Nike\'s pain points are clear: Inventory inefficiency, wholesale reconnects, and modern brand competition. Intellify\'s custom predictive demand engines and digital experience consulting are highly aligned to John Donahoe\'s $2B cost-saving and digital growth mandate.'
+    summary: 'Nike\'s pain points are clear: Inventory inefficiency, wholesale reconnects, and modern brand competition. Indus Health Plus\'s corporate wellness and preventive health solutions are highly aligned to leadership priorities.'
   },
   acc_tesla: {
     accountId: 'acc_tesla',

@@ -49,7 +49,7 @@ export interface StakeholderIntelligence {
   communicationStyle?: string;
   recommendedApproach?: string;
   recommendedQuestions?: string[];
-  recommendedIntellifySolutions?: { solution: string; whyRelevant: string }[];
+  recommendedIndusSolutions?: { solution: string; whyRelevant: string }[];
   confidence?: number;
   evidence?: string[];
   influenceScore?: number;
@@ -349,7 +349,7 @@ export interface ExecutiveSummary {
   keyRisks: string[];
   keyOpportunities: string[];
   recommendedStrategy: string;
-  recommendedIntellifyServices: string[];
+  recommendedIndusServices?: string[];
   overallConfidence: number;
 }
 

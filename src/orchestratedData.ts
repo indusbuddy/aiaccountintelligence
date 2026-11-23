@@ -268,7 +268,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         keyRisks: ['Spiraling AI datacenter CAPEX scaling faster than near-term licensing revenue', 'GPU cluster power and supply chain bottlenecks', 'Consumer anxiety over IP privacy borders'],
         keyOpportunities: ['Strategic consulting to help Microsoft buyers demonstrate AI ROI', 'Co-building specific connectors for PowerAutomate', 'Expanding sovereign datacenter secure pipelines'],
         recommendedStrategy: 'Position Indus Health Plus as a High-Leverage Solutions Partner. Rather than trying to sell general software, lead with a specialized consultancy focused on proving Copilot and Azure OpenAI ROI to enterprise accounts, co-designing custom value trackers.',
-        recommendedIntellifyServices: ['Enterprise Strategy Consulting', 'Advanced Solutions Development', 'Rapid Prototyping'],
+        recommendedIndusServices: ['Enterprise Strategy Consulting', 'Advanced Solutions Development', 'Rapid Prototyping'],
         overallConfidence: 94,
       }
     }
@@ -465,7 +465,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         keyRisks: ['Spike in nimbler competitors stealing running market share', 'Margin dilution due to ongoing promotional clearance cycles', 'Disconnected customer loyalty data across regional application silos'],
         keyOpportunities: ['Bespoke predictive demand engines to lower warehouse stock backlogs', 'D2C customer personalization consultancies', 'Co-innovation labs for Beaverton research alignment'],
         recommendedStrategy: 'Lead with the $2B Operations Savings Angle. Position Indus Health Plus\'s Custom Supply Chain Predictive engines as a direct lever to lower inventory backlogs and speed up design-to-shelf latency.',
-        recommendedIntellifyServices: ['Advanced Analytics & AI Development', 'Custom Supply Chain Solutions'],
+        recommendedIndusServices: ['Advanced Analytics & AI Development', 'Custom Supply Chain Solutions'],
         overallConfidence: 86,
       }
     }
@@ -647,7 +647,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         keyRisks: ['Slowing operational cash flow due to patent expirations', 'Severe regulatory penalties if patient data leaks', 'Strong market competitors dominating the obesity therapeutics sector'],
         keyOpportunities: ['Bespoke patient trial matching engines', 'Secure pre-clinical document parsing portals', 'Co-innovating compliance workflows'],
         recommendedStrategy: 'Lead with Regulatory and HIPAA-Compliance Assurance. When pitching Indus Health Plus solutions, highlight our secure, isolated LLM indexing templates, demonstrating that patient data never exits the Pfizer-owned AWS VPC sandbox.',
-        recommendedIntellifyServices: ['Life Sciences Regulatory AI Integration', 'Advanced Solutions Development'],
+        recommendedIndusServices: ['Life Sciences Regulatory AI Integration', 'Advanced Solutions Development'],
         overallConfidence: 82,
       }
     }
@@ -914,7 +914,7 @@ export const INITIAL_ORCHESTRATED_RESEARCH: Record<string, OrchestratedResearch>
         keyRisks: ['Evolving regulatory friction delaying robotaxi launches', 'EV pricing wars eroding margins', 'Sourcing chemical mining elements securely'],
         keyOpportunities: ['Custom mineral risk prediction software integrations', 'V2X secure cloud sandbox pilots', 'Grid load-balancing co-innovation'],
         recommendedStrategy: 'Position as a Specialized Engineering Partner. Avoid standard administrative solutions; focus exclusively on high-performance computational risk models or secure edge-device clusters.',
-        recommendedIntellifyServices: ['Custom Supply Chain Solutions', 'Advanced Solutions Development'],
+        recommendedIndusServices: ['Custom Supply Chain Solutions', 'Advanced Solutions Development'],
         overallConfidence: 90,
       }
     }

@@ -83,7 +83,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-slate-300 mt-0.5">
-                Refresh target account signals and automatically dispatch alerts to account owners, Mahesh & Srini.
+                Refresh target account signals and automatically dispatch alerts to account owners and Indus Health Plus leadership.
               </p>
             </div>
           </div>
@@ -109,7 +109,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                     Exclusive Market Signals Routing Matrix
                   </span>
                   <span className="text-[10px] text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full font-bold">
-                    ✓ Restricted to Account Owners, Mahesh & Srini
+                    ✓ Restricted to Account Owners & Leadership
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-600 leading-relaxed">
@@ -122,11 +122,19 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
                     <Lucide.Shield className="w-3.5 h-3.5 text-purple-600" />
-                    Mahesh (mahesh@intellifysolutions.com)
+                    Shailesh Thakare (shailesh.thakare@indushealthplus.com)
                   </span>
                   <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
                     <Lucide.Shield className="w-3.5 h-3.5 text-purple-600" />
-                    Srini (srini@intellifysolutions.com)
+                    Shashaank D (shashaank.d@indushealthplus.com)
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
+                    <Lucide.Shield className="w-3.5 h-3.5 text-purple-600" />
+                    Balaji Hadole (balaji.hadole@indushealthplus.com)
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white border border-slate-200 font-semibold text-slate-800 shadow-2xs">
+                    <Lucide.Shield className="w-3.5 h-3.5 text-purple-600" />
+                    Samarth Patki (samarth.patki@indushealthplus.com)
                   </span>
                 </div>
                 <p className="text-[10px] text-slate-400 italic pt-0.5">
@@ -247,7 +255,7 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
               </div>
               <div className="flex items-center justify-center gap-2 text-[10px] font-mono font-bold text-blue-600">
                 <span className="h-2 w-2 rounded-full bg-blue-600 animate-ping" />
-                <span>Dispatching alert payload to Mahesh, Srini & Account Owners...</span>
+                <span>Dispatching alert payload to Indus Health Plus Leadership & Account Owners...</span>
               </div>
             </div>
           )}
@@ -335,10 +343,16 @@ export const SignalsRefreshModal: React.FC<SignalsRefreshModalProps> = ({
                           👤 Indus Health Plus Owner: {dispatch.ownerName} ({dispatch.ownerEmail})
                         </span>
                         <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-100">
-                          🛡️ Mahesh (mahesh@intellifysolutions.com)
+                          🛡️ Shailesh Thakare (shailesh.thakare@indushealthplus.com)
                         </span>
                         <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-100">
-                          🛡️ Srini (srini@intellifysolutions.com)
+                          🛡️ Shashaank D (shashaank.d@indushealthplus.com)
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-100">
+                          🛡️ Balaji Hadole (balaji.hadole@indushealthplus.com)
+                        </span>
+                        <span className="px-2 py-0.5 rounded bg-purple-50 text-purple-700 font-semibold border border-purple-100">
+                          🛡️ Samarth Patki (samarth.patki@indushealthplus.com)
                         </span>
                       </div>
 
