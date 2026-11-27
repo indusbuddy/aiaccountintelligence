@@ -8,10 +8,34 @@ import path from "path";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI, Type } from "@google/genai";
 import dotenv from "dotenv";
-import { db } from "./src/db/index.ts";
-import * as schema from "./src/db/schema.ts";
+import { connectMongo } from "./src/db/mongo.ts";
+import {
+  UserModel,
+  AllowedUserModel,
+  AccountModel,
+  StakeholderModel,
+  OpportunityModel,
+  DocumentModel,
+  TemplateModel,
+  ActivityModel,
+  SettingModel,
+  NotificationModel,
+  CustomResearchModel,
+  OrchestratedResearchModel,
+  EvidenceModel,
+} from "./src/db/models.ts";
+import {
+  INITIAL_ACCOUNTS,
+  INITIAL_STAKEHOLDERS,
+  MOCK_OPPORTUNITIES,
+  MOCK_DOCUMENTS,
+  INITIAL_TEMPLATES,
+  INITIAL_ACTIVITIES,
+  MOCK_RESEARCH_TEMPLATES,
+  INITIAL_EVIDENCE,
+} from "./src/data.ts";
+import { INITIAL_ORCHESTRATED_RESEARCH } from "./src/orchestratedData.ts";
 import { requireAuth, AuthRequest } from "./src/middleware/auth.ts";
-import { eq } from "drizzle-orm";
 import { deriveOwnerEmail } from "./src/lib/signalsEngine.ts";
 
 dotenv.config();
@@ -585,11 +609,35 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
       userEmail === 'ecomm.indus@gmail.com' ||
       userRole === 'admin';
 
-    // 1. Fetch all accounts from the single database
-    const allAccounts = await db.select().from(schema.accounts);
+    // 1. Fetch all collections in parallel from MongoDB
+    const [
+      allAccounts,
+      allStakeholders,
+      allOpportunities,
+      allDocuments,
+      allActivities,
+      allEvidence,
+      allCustomResearches,
+      allOrchestratedResearches,
+      allTemplates,
+      allNotifications,
+      allSettings,
+    ] = await Promise.all([
+      AccountModel.find().lean(),
+      StakeholderModel.find().lean(),
+      OpportunityModel.find().lean(),
+      DocumentModel.find().lean(),
+      ActivityModel.find().lean(),
+      EvidenceModel.find().lean(),
+      CustomResearchModel.find().lean(),
+      OrchestratedResearchModel.find().lean(),
+      TemplateModel.find().lean(),
+      NotificationModel.find().lean(),
+      SettingModel.find().lean(),
+    ]);
 
     // Filter accounts visible to this user
-    let visibleAccounts: (typeof schema.accounts.$inferSelect)[];
+    let visibleAccounts: any[];
     if (isGlobalViewer) {
       // Indus Health Plus Leadership and Admins see ALL accounts across the organization
       visibleAccounts = allAccounts;
@@ -598,7 +646,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
       // a) Accounts created by them
       // b) Accounts where they are the owner
       // c) Accounts explicitly shared with their email
-      visibleAccounts = allAccounts.filter((acc) => {
+      visibleAccounts = allAccounts.filter((acc: any) => {
         if (acc.userId === userId) return true;
         if (acc.createdByEmail && acc.createdByEmail.toLowerCase() === userEmail) return true;
         if (acc.owner && acc.owner.toLowerCase().includes(userEmail)) return true;
@@ -610,52 +658,43 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
       });
     }
 
-    const visibleAccountIds = new Set(visibleAccounts.map(a => a.id));
+    const visibleAccountIds = new Set(visibleAccounts.map((a: any) => a.id));
 
-    // 2. Fetch stakeholders for visible accounts
-    const allStakeholders = await db.select().from(schema.stakeholders);
-    const stakeholdersData = allStakeholders.filter(s => visibleAccountIds.has(s.accountId));
+    // 2. Stakeholders for visible accounts
+    const stakeholdersData = allStakeholders.filter((s: any) => visibleAccountIds.has(s.accountId));
 
-    // 3. Fetch opportunities for visible accounts
-    const allOpportunities = await db.select().from(schema.opportunities);
-    const opportunitiesData = allOpportunities.filter(o => visibleAccountIds.has(o.accountId));
+    // 3. Opportunities for visible accounts
+    const opportunitiesData = allOpportunities.filter((o: any) => visibleAccountIds.has(o.accountId));
 
-    // 4. Fetch documents for visible accounts
-    const allDocuments = await db.select().from(schema.documents);
-    const documentsData = allDocuments.filter(d => visibleAccountIds.has(d.accountId));
+    // 4. Documents for visible accounts
+    const documentsData = allDocuments.filter((d: any) => visibleAccountIds.has(d.accountId));
 
-    // 5. Fetch activities for visible accounts
-    const allActivities = await db.select().from(schema.activities);
-    const activitiesData = allActivities.filter(a => !a.accountId || visibleAccountIds.has(a.accountId));
+    // 5. Activities for visible accounts
+    const activitiesData = allActivities.filter((a: any) => !a.accountId || visibleAccountIds.has(a.accountId));
 
-    // 6. Fetch evidence for visible accounts
-    const allEvidence = await db.select().from(schema.evidence);
-    const evidenceData = allEvidence.filter(e => !e.accountId || visibleAccountIds.has(e.accountId));
+    // 6. Evidence for visible accounts
+    const evidenceData = allEvidence.filter((e: any) => !e.accountId || visibleAccountIds.has(e.accountId));
 
     // 7. Researches for visible accounts
-    const allCustomResearches = await db.select().from(schema.customResearches);
     const customResearchesMap: Record<string, any> = {};
-    for (const cr of allCustomResearches) {
+    for (const cr of allCustomResearches as any[]) {
       if (visibleAccountIds.has(cr.accountId)) {
         customResearchesMap[cr.accountId] = cr;
       }
     }
 
-    const allOrchestratedResearches = await db.select().from(schema.orchestratedResearches);
     const orchestratedResearchesMap: Record<string, any> = {};
-    for (const or of allOrchestratedResearches) {
+    for (const or of allOrchestratedResearches as any[]) {
       if (visibleAccountIds.has(or.accountId)) {
         orchestratedResearchesMap[or.accountId] = or;
       }
     }
 
     // 8. Templates - shared platform templates
-    const allTemplates = await db.select().from(schema.templates);
-    const templatesData = allTemplates.length > 0 ? allTemplates : await db.select().from(schema.templates).where(eq(schema.templates.userId, userId));
+    const templatesData = allTemplates;
 
     // 9. Notifications - Strictly filtered: Market signals are informed to account owners and Indus Health Plus leadership
-    const allNotifications = await db.select().from(schema.notifications);
-    const notificationsData = allNotifications.filter((n) => {
+    const notificationsData = allNotifications.filter((n: any) => {
       // If it's a market signal notification
       if (n.type === 'signal' || (n.title && n.title.includes('Signals'))) {
         const isLeadership =
@@ -675,7 +714,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
 
         // Check if user is the Indus Health Plus Account Owner for this account
         if (n.accountId) {
-          const acc = allAccounts.find(a => a.id === n.accountId);
+          const acc = (allAccounts as any[]).find(a => a.id === n.accountId);
           if (acc) {
             const ownerEmail = deriveOwnerEmail(acc.owner, acc.createdByEmail).toLowerCase().trim();
             if (ownerEmail === userEmail) return true;
@@ -693,8 +732,7 @@ app.get("/api/sync", requireAuth, async (req: AuthRequest, res) => {
     });
 
     // 10. Settings - Uniform platform settings shared across all existing and new users
-    const allSettings = await db.select().from(schema.settings);
-    const userSettings = allSettings.find(s => s.id === 'global') || allSettings[0] || {
+    const userSettings = (allSettings as any[]).find(s => s.id === 'global') || allSettings[0] || {
       id: 'global',
       userId: userId,
       aiProvider: 'Gemini',
@@ -734,13 +772,11 @@ app.post("/api/accounts", requireAuth, async (req: AuthRequest, res) => {
       data.sharedWith = [];
     }
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.accounts)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.accounts.id,
-        set: updateData
-      });
+    await AccountModel.findOneAndUpdate(
+      { id: data.id },
+      { $set: data },
+      { upsert: true, new: true }
+    );
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting account:", err);
@@ -756,12 +792,11 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
       return res.status(400).json({ error: "An array of emails is required for sharing." });
     }
 
-    const existing = await db.select().from(schema.accounts).where(eq(schema.accounts.id, accountId));
-    if (existing.length === 0) {
+    const currentAccount: any = await AccountModel.findOne({ id: accountId }).lean();
+    if (!currentAccount) {
       return res.status(404).json({ error: "Account not found." });
     }
 
-    const currentAccount = existing[0];
     const userEmail = (req.user?.email || '').toLowerCase().trim();
     const userRole = req.dbUser.role || 'member';
 
@@ -783,14 +818,15 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
 
     const cleanEmails = Array.from(new Set(emails.map((e: string) => String(e).toLowerCase().trim()).filter(Boolean)));
 
-    const updated = await db.update(schema.accounts)
-      .set({ sharedWith: cleanEmails })
-      .where(eq(schema.accounts.id, accountId))
-      .returning();
+    const updated = await AccountModel.findOneAndUpdate(
+      { id: accountId },
+      { $set: { sharedWith: cleanEmails } },
+      { new: true, lean: true }
+    );
 
     // Log in activities
     try {
-      await db.insert(schema.activities).values({
+      await ActivityModel.create({
         id: `act_${Date.now()}`,
         userId: req.dbUser.id,
         timestamp: new Date().toISOString(),
@@ -803,7 +839,7 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
       console.warn("Failed to log activity for share:", actErr);
     }
 
-    res.json({ success: true, account: updated[0], sharedWith: cleanEmails });
+    res.json({ success: true, account: updated, sharedWith: cleanEmails });
   } catch (err: any) {
     console.error("Error sharing account:", err);
     res.status(500).json({ error: err.message });
@@ -812,7 +848,16 @@ app.post("/api/accounts/:id/share", requireAuth, async (req: AuthRequest, res) =
 
 app.delete("/api/accounts/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.accounts).where(eq(schema.accounts.id, req.params.id));
+    const accountId = req.params.id;
+    await Promise.all([
+      AccountModel.deleteOne({ id: accountId }),
+      StakeholderModel.deleteMany({ accountId }),
+      OpportunityModel.deleteMany({ accountId }),
+      DocumentModel.deleteMany({ accountId }),
+      CustomResearchModel.deleteOne({ accountId }),
+      OrchestratedResearchModel.deleteOne({ accountId }),
+      EvidenceModel.deleteMany({ accountId }),
+    ]);
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting account:", err);
@@ -824,13 +869,7 @@ app.post("/api/stakeholders", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.stakeholders)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.stakeholders.id,
-        set: updateData
-      });
+    await StakeholderModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting stakeholder:", err);
@@ -840,7 +879,7 @@ app.post("/api/stakeholders", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/stakeholders/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.stakeholders).where(eq(schema.stakeholders.id, req.params.id));
+    await StakeholderModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting stakeholder:", err);
@@ -852,13 +891,7 @@ app.post("/api/opportunities", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.opportunities)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.opportunities.id,
-        set: updateData
-      });
+    await OpportunityModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting opportunity:", err);
@@ -868,7 +901,7 @@ app.post("/api/opportunities", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/opportunities/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.opportunities).where(eq(schema.opportunities.id, req.params.id));
+    await OpportunityModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting opportunity:", err);
@@ -880,13 +913,7 @@ app.post("/api/documents", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.documents)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.documents.id,
-        set: updateData
-      });
+    await DocumentModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting document:", err);
@@ -896,7 +923,7 @@ app.post("/api/documents", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/documents/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.documents).where(eq(schema.documents.id, req.params.id));
+    await DocumentModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting document:", err);
@@ -908,13 +935,7 @@ app.post("/api/templates", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.templates)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.templates.id,
-        set: updateData
-      });
+    await TemplateModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting template:", err);
@@ -924,7 +945,7 @@ app.post("/api/templates", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/templates/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.templates).where(eq(schema.templates.id, req.params.id));
+    await TemplateModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting template:", err);
@@ -936,13 +957,7 @@ app.post("/api/activities", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.activities)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.activities.id,
-        set: updateData
-      });
+    await ActivityModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting activity:", err);
@@ -952,7 +967,7 @@ app.post("/api/activities", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/activities/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.activities).where(eq(schema.activities.id, req.params.id));
+    await ActivityModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting activity:", err);
@@ -967,13 +982,7 @@ app.post("/api/settings", requireAuth, async (req: AuthRequest, res) => {
     data.geminiApiKey = 'SERVER_MANAGED_KEY';
     data.userId = req.dbUser.id;
     data.id = 'global';
-    const { id, ...updateData } = data;
-    await db.insert(schema.settings)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.settings.id,
-        set: updateData
-      });
+    await SettingModel.findOneAndUpdate({ id: 'global' }, { $set: data }, { upsert: true });
     res.json({ success: true, settings: data });
   } catch (err: any) {
     console.error("Error upserting settings:", err);
@@ -985,13 +994,7 @@ app.post("/api/notifications", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.notifications)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.notifications.id,
-        set: updateData
-      });
+    await NotificationModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting notification:", err);
@@ -1001,7 +1004,7 @@ app.post("/api/notifications", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/notifications/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.notifications).where(eq(schema.notifications.id, req.params.id));
+    await NotificationModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting notification:", err);
@@ -1013,13 +1016,7 @@ app.post("/api/custom-researches", requireAuth, async (req: AuthRequest, res) =>
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { accountId, ...updateData } = data;
-    await db.insert(schema.customResearches)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.customResearches.accountId,
-        set: updateData
-      });
+    await CustomResearchModel.findOneAndUpdate({ accountId: data.accountId }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting custom research:", err);
@@ -1031,13 +1028,7 @@ app.post("/api/orchestrated-researches", requireAuth, async (req: AuthRequest, r
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { accountId, ...updateData } = data;
-    await db.insert(schema.orchestratedResearches)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.orchestratedResearches.accountId,
-        set: updateData
-      });
+    await OrchestratedResearchModel.findOneAndUpdate({ accountId: data.accountId }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting orchestrated research:", err);
@@ -1049,13 +1040,7 @@ app.post("/api/evidence", requireAuth, async (req: AuthRequest, res) => {
   try {
     const data = req.body;
     data.userId = req.dbUser.id;
-    const { id, ...updateData } = data;
-    await db.insert(schema.evidence)
-      .values(data)
-      .onConflictDoUpdate({
-        target: schema.evidence.id,
-        set: updateData
-      });
+    await EvidenceModel.findOneAndUpdate({ id: data.id }, { $set: data }, { upsert: true });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error upserting evidence:", err);
@@ -1065,7 +1050,7 @@ app.post("/api/evidence", requireAuth, async (req: AuthRequest, res) => {
 
 app.delete("/api/evidence/:id", requireAuth, async (req: AuthRequest, res) => {
   try {
-    await db.delete(schema.evidence).where(eq(schema.evidence.id, req.params.id));
+    await EvidenceModel.deleteOne({ id: req.params.id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting evidence:", err);
@@ -1092,7 +1077,7 @@ app.get("/api/auth/me", requireAuth, async (req: AuthRequest, res) => {
 
 app.get("/api/allowed-users", requireAuth, async (req: AuthRequest, res) => {
   try {
-    const list = await db.select().from(schema.allowedUsers);
+    const list = await AllowedUserModel.find().sort({ id: 1 }).lean();
     res.json(list);
   } catch (err: any) {
     console.error("Error fetching allowed users:", err);
@@ -1114,25 +1099,35 @@ app.post("/api/allowed-users", requireAuth, async (req: AuthRequest, res) => {
     const normalizedEmail = email.toLowerCase().trim();
     const currentUserEmail = req.user?.email || "admin";
 
-    const inserted = await db.insert(schema.allowedUsers)
-      .values({
+    const existingUser = await AllowedUserModel.findOne({ email: normalizedEmail }).lean();
+    let savedUser;
+
+    if (existingUser) {
+      savedUser = await AllowedUserModel.findOneAndUpdate(
+        { email: normalizedEmail },
+        {
+          $set: {
+            name: name?.trim() || normalizedEmail.split("@")[0],
+            role: role === "admin" ? "admin" : "member",
+            status: "active",
+          }
+        },
+        { new: true, lean: true }
+      );
+    } else {
+      const maxUser: any = await AllowedUserModel.findOne().sort({ id: -1 }).lean();
+      const nextId = maxUser && typeof maxUser.id === 'number' ? maxUser.id + 1 : 1;
+      savedUser = await AllowedUserModel.create({
+        id: nextId,
         email: normalizedEmail,
         name: name?.trim() || normalizedEmail.split("@")[0],
         role: role === "admin" ? "admin" : "member",
         status: "active",
-        addedBy: currentUserEmail
-      })
-      .onConflictDoUpdate({
-        target: schema.allowedUsers.email,
-        set: {
-          name: name?.trim() || normalizedEmail.split("@")[0],
-          role: role === "admin" ? "admin" : "member",
-          status: "active"
-        }
-      })
-      .returning();
+        addedBy: currentUserEmail,
+      });
+    }
 
-    res.json({ success: true, user: inserted[0] });
+    res.json({ success: true, user: savedUser });
   } catch (err: any) {
     console.error("Error adding allowed user:", err);
     res.status(500).json({ error: err.message });
@@ -1151,12 +1146,10 @@ app.put("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) => 
     }
 
     const { name, email, role, status } = req.body;
-    const existing = await db.select().from(schema.allowedUsers).where(eq(schema.allowedUsers.id, id));
-    if (existing.length === 0) {
+    const targetUser: any = await AllowedUserModel.findOne({ id }).lean();
+    if (!targetUser) {
       return res.status(404).json({ error: "User not found." });
     }
-
-    const targetUser = existing[0];
 
     // Protect primary owner from being demoted or suspended or email changed
     if (targetUser.email.toLowerCase() === "samarth.patki@indushealthplus.com") {
@@ -1181,8 +1174,8 @@ app.put("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) => 
       }
       // Check if email has changed and conflicts with another user
       if (normalizedEmail !== targetUser.email.toLowerCase()) {
-        const conflict = await db.select().from(schema.allowedUsers).where(eq(schema.allowedUsers.email, normalizedEmail));
-        if (conflict.length > 0) {
+        const conflict = await AllowedUserModel.findOne({ email: normalizedEmail }).lean();
+        if (conflict) {
           return res.status(409).json({ error: `A user with email ${normalizedEmail} is already registered.` });
         }
         updatePayload.email = normalizedEmail;
@@ -1192,11 +1185,9 @@ app.put("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) => 
     if (role && ['admin', 'member'].includes(role)) {
       updatePayload.role = role;
       try {
-        await db.update(schema.users)
-          .set({ role })
-          .where(eq(schema.users.email, targetUser.email));
+        await UserModel.updateMany({ email: targetUser.email }, { $set: { role } });
       } catch (err) {
-        console.warn("Could not sync role to users table:", err);
+        console.warn("Could not sync role to users collection:", err);
       }
     }
 
@@ -1208,23 +1199,25 @@ app.put("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) => 
       return res.json({ success: true, user: targetUser });
     }
 
-    const updated = await db.update(schema.allowedUsers)
-      .set(updatePayload)
-      .where(eq(schema.allowedUsers.id, id))
-      .returning();
+    const updated = await AllowedUserModel.findOneAndUpdate(
+      { id },
+      { $set: updatePayload },
+      { new: true, lean: true }
+    );
 
-    // If email changed, sync in users table if matching record exists
+    // If email changed, sync in users collection if matching record exists
     if (updatePayload.email && updatePayload.email !== targetUser.email) {
       try {
-        await db.update(schema.users)
-          .set({ email: updatePayload.email })
-          .where(eq(schema.users.email, targetUser.email));
+        await UserModel.updateMany(
+          { email: targetUser.email },
+          { $set: { email: updatePayload.email } }
+        );
       } catch (err) {
-        console.warn("Could not sync email to users table:", err);
+        console.warn("Could not sync email to users collection:", err);
       }
     }
 
-    res.json({ success: true, user: updated[0] });
+    res.json({ success: true, user: updated });
   } catch (err: any) {
     console.error("Error updating allowed user:", err);
     res.status(500).json({ error: err.message });
@@ -1243,12 +1236,12 @@ app.delete("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) 
     }
 
     // Protect primary admin from deletion
-    const existing = await db.select().from(schema.allowedUsers).where(eq(schema.allowedUsers.id, id));
-    if (existing.length > 0 && existing[0].email === "samarth.patki@indushealthplus.com") {
+    const existing: any = await AllowedUserModel.findOne({ id }).lean();
+    if (existing && existing.email === "samarth.patki@indushealthplus.com") {
       return res.status(403).json({ error: "The primary platform owner cannot be removed." });
     }
 
-    await db.delete(schema.allowedUsers).where(eq(schema.allowedUsers.id, id));
+    await AllowedUserModel.deleteOne({ id });
     res.json({ success: true });
   } catch (err: any) {
     console.error("Error deleting allowed user:", err);
@@ -1258,15 +1251,15 @@ app.delete("/api/allowed-users/:id", requireAuth, async (req: AuthRequest, res) 
 
 async function seedDefaultAllowedUsers() {
   try {
-    const existing = await db.select().from(schema.allowedUsers);
-    if (existing.length === 0) {
-      console.log("[Access Control] Seeding initial authorized team members...");
-      await db.insert(schema.allowedUsers).values([
-        { email: 'shailesh.thakare@indushealthplus.com', name: 'Shailesh Thakare', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'shashaank.d@indushealthplus.com', name: 'Shashaank D', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'balaji.hadole@indushealthplus.com', name: 'Balaji Hadole', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'samarth.patki@indushealthplus.com', name: 'Samarth Patki', role: 'admin', status: 'active', addedBy: 'system' },
-        { email: 'ecomm.indus@gmail.com', name: 'Indus Admin', role: 'admin', status: 'active', addedBy: 'system' }
+    const count = await AllowedUserModel.countDocuments();
+    if (count === 0) {
+      console.log("[Access Control] Seeding initial authorized Indus Health Plus leadership team...");
+      await AllowedUserModel.insertMany([
+        { id: 1, email: 'shailesh.thakare@indushealthplus.com', name: 'Shailesh Thakare', role: 'admin', status: 'active', addedBy: 'system' },
+        { id: 2, email: 'shashaank.d@indushealthplus.com', name: 'Shashaank D', role: 'admin', status: 'active', addedBy: 'system' },
+        { id: 3, email: 'balaji.hadole@indushealthplus.com', name: 'Balaji Hadole', role: 'admin', status: 'active', addedBy: 'system' },
+        { id: 4, email: 'samarth.patki@indushealthplus.com', name: 'Samarth Patki', role: 'admin', status: 'active', addedBy: 'system' },
+        { id: 5, email: 'ecomm.indus@gmail.com', name: 'Indus Admin', role: 'admin', status: 'active', addedBy: 'system' }
       ]);
       console.log("[Access Control] Seeded initial authorized users successfully.");
     }
@@ -1275,8 +1268,70 @@ async function seedDefaultAllowedUsers() {
   }
 }
 
+async function seedInitialDatabaseData() {
+  try {
+    const tasks: Promise<any>[] = [];
+
+    if ((await AccountModel.countDocuments()) === 0) {
+      tasks.push(AccountModel.insertMany(INITIAL_ACCOUNTS.map(a => ({ ...a, sharedWith: a.sharedWith || [] })), { ordered: false }).catch(() => {}));
+    }
+    if ((await StakeholderModel.countDocuments()) === 0) {
+      tasks.push(StakeholderModel.insertMany(INITIAL_STAKEHOLDERS, { ordered: false }).catch(() => {}));
+    }
+    if ((await OpportunityModel.countDocuments()) === 0) {
+      tasks.push(OpportunityModel.insertMany(MOCK_OPPORTUNITIES, { ordered: false }).catch(() => {}));
+    }
+    if ((await DocumentModel.countDocuments()) === 0) {
+      tasks.push(DocumentModel.insertMany(MOCK_DOCUMENTS, { ordered: false }).catch(() => {}));
+    }
+    if ((await TemplateModel.countDocuments()) === 0) {
+      tasks.push(TemplateModel.insertMany(INITIAL_TEMPLATES, { ordered: false }).catch(() => {}));
+    }
+    if ((await ActivityModel.countDocuments()) === 0) {
+      tasks.push(ActivityModel.insertMany(INITIAL_ACTIVITIES, { ordered: false }).catch(() => {}));
+    }
+    if ((await EvidenceModel.countDocuments()) === 0) {
+      tasks.push(EvidenceModel.insertMany(INITIAL_EVIDENCE, { ordered: false }).catch(() => {}));
+    }
+    if ((await CustomResearchModel.countDocuments()) === 0) {
+      tasks.push(CustomResearchModel.insertMany(Object.values(MOCK_RESEARCH_TEMPLATES), { ordered: false }).catch(() => {}));
+    }
+    if ((await OrchestratedResearchModel.countDocuments()) === 0) {
+      tasks.push(OrchestratedResearchModel.insertMany(Object.values(INITIAL_ORCHESTRATED_RESEARCH), { ordered: false }).catch(() => {}));
+    }
+    if ((await SettingModel.countDocuments()) === 0) {
+      tasks.push(
+        SettingModel.findOneAndUpdate(
+          { id: 'global' },
+          {
+            $setOnInsert: {
+              id: 'global',
+              aiProvider: 'Gemini',
+              geminiApiKey: 'SERVER_MANAGED_KEY',
+              modelSelection: 'gemini-3.5-flash',
+              defaultResearchDepth: 'Deep',
+              theme: 'Light',
+            }
+          },
+          { upsert: true }
+        )
+      );
+    }
+
+    if (tasks.length > 0) {
+      console.log(`[MongoDB Seed] Seeding ${tasks.length} empty collections...`);
+      await Promise.all(tasks);
+      console.log("[MongoDB Seed] Baseline data seeding completed.");
+    }
+  } catch (err) {
+    console.error("[MongoDB Seed] Error seeding initial data:", err);
+  }
+}
+
 async function startServer() {
+  await connectMongo();
   await seedDefaultAllowedUsers();
+  await seedInitialDatabaseData();
 
   // Vite middleware for development
   if (process.env.NODE_ENV !== "production") {

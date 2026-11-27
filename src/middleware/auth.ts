@@ -1,8 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { adminAuth } from '../lib/firebase-admin.ts';
-import { db } from '../db/index.ts';
-import { users, allowedUsers } from '../db/schema.ts';
-import { eq, and } from 'drizzle-orm';
+import { UserModel, AllowedUserModel } from '../db/models.ts';
 
 export interface AuthRequest extends Request {
   user?: any;
@@ -47,15 +45,13 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
       });
     }
 
-    // Check whether the email is present and active in allowed_users table
+    // Check whether the email is present and active in allowed_users collection
     let allowedList: any[] = [];
     try {
-      allowedList = await db.select().from(allowedUsers).where(
-        and(
-          eq(allowedUsers.email, email),
-          eq(allowedUsers.status, 'active')
-        )
-      );
+      allowedList = await AllowedUserModel.find({
+        email,
+        status: 'active'
+      }).lean();
     } catch (dbErr) {
       console.warn('Database offline while checking allowed_users, proceeding with domain rules.');
     }
@@ -83,18 +79,16 @@ export const requireAuth = async (req: AuthRequest, res: Response, next: NextFun
 
     req.dbUser = { id: uid, uid, email, role };
     try {
-      let dbUserResult = await db.select().from(users).where(eq(users.uid, uid));
-      if (dbUserResult.length === 0) {
-        const inserted = await db.insert(users)
-          .values({ uid, email, role })
-          .onConflictDoUpdate({
-            target: users.uid,
-            set: { email, role }
-          })
-          .returning();
-        if (inserted.length > 0) req.dbUser = inserted[0];
-      } else {
-        req.dbUser = dbUserResult[0];
+      let dbUserResult: any = await UserModel.findOne({ uid }).lean();
+      if (!dbUserResult) {
+        dbUserResult = await UserModel.findOneAndUpdate(
+          { uid },
+          { $set: { id: uid, uid, email, role } },
+          { upsert: true, new: true, lean: true }
+        );
+      }
+      if (dbUserResult) {
+        req.dbUser = { ...dbUserResult, id: dbUserResult.id || dbUserResult.uid };
       }
     } catch (dbErr) {
       // Continue with in-memory session when DB is offline

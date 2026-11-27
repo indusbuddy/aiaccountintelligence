@@ -28,10 +28,11 @@ export interface RefreshSignalsSummary {
 
 // Fixed leadership emails specified in requirements
 export const LEADERSHIP_EMAILS = [
-  'shailesh.thakare@indushealthplus.com',
-  'shashaank.d@indushealthplus.com',
-  'balaji.hadole@indushealthplus.com',
-  'samarth.patki@indushealthplus.com'
+  // 'shailesh.thakare@indushealthplus.com',
+  // 'shashaank.d@indushealthplus.com',
+  // 'balaji.hadole@indushealthplus.com',
+  'samarth.patki@indushealthplus.com',
+  'ecomm.indus@gmail.com'
 ];
 
 /**
@@ -281,7 +282,7 @@ export function createAccountSignalDispatch(
 
   // Combine all recipients ensuring uniqueness
   const allRecipients = Array.from(new Set([
-    ownerEmail,
+    // ownerEmail,
     ...leadershipRecipients
   ]));
 
