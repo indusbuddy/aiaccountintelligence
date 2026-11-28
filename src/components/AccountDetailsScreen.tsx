@@ -34,6 +34,8 @@ export const AccountDetailsScreen: React.FC = () => {
 
   const [activeModuleId, setActiveModuleId] = useState<string>('company');
   const [selectedDepth, setSelectedDepth] = useState<ResearchDepthType>('Standard');
+  const [selectedPackageRate, setSelectedPackageRate] = useState<number>(2500);
+  const [coveragePercent, setCoveragePercent] = useState<number>(60);
 
   // Find the selected account
   const account = accounts.find(a => a.id === selectedAccountId);
@@ -51,7 +53,7 @@ export const AccountDetailsScreen: React.FC = () => {
     firstName: '',
     lastName: '',
     title: '',
-    department: 'IT & Engineering',
+    department: 'Human Resources & Wellness',
     company: account?.name || '',
     email: '',
     linkedIn: '',
@@ -65,8 +67,8 @@ export const AccountDetailsScreen: React.FC = () => {
   const [oppForm, setOppForm] = useState({
     title: '',
     description: '',
-    service: 'Enterprise Strategy Consulting',
-    value: '$150,000',
+    service: 'Annual Health Check-Up Program',
+    value: '₹15,00,000',
     probability: 50,
   });
 
@@ -299,6 +301,9 @@ export const AccountDetailsScreen: React.FC = () => {
         {[
           { key: 'overview', label: 'Overview', icon: 'LayoutDashboard' },
           { key: 'research', label: 'Research', icon: 'Cpu' },
+          { key: 'workforce', label: 'Workforce', icon: 'MapPin' },
+          { key: 'wellness', label: 'Health & Wellness', icon: 'HeartPulse' },
+          { key: 'budget_hr', label: 'Budget & HR Org', icon: 'Wallet' },
           { key: 'evidence', label: 'Evidence', icon: 'Library' },
           { key: 'documents', label: 'Documents', icon: 'FolderUp' },
           { key: 'stakeholders', label: 'Stakeholders', icon: 'Users2' },
@@ -1401,6 +1406,457 @@ export const AccountDetailsScreen: React.FC = () => {
 
               </div>
 
+            </div>
+          );
+        })()}
+
+        {/* ======================================================== WORKFORCE & LOCATIONS TAB */}
+        {currentDetailSubTab === 'workforce' && (() => {
+          const orch = orchestratedResearches[account.id];
+          const hc = orch?.data?.headcountDistribution;
+          const grounding = orch?.data?.groundingSources || [];
+          return (
+            <div className="space-y-6 animate-fade-in">
+              {!hc ? (
+                <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-8 text-center space-y-3">
+                  <Lucide.MapPin className="w-8 h-8 text-slate-300 mx-auto" />
+                  <h3 className="text-sm font-bold text-[#091540]">Workforce & Branch Data Not Yet Synthesized</h3>
+                  <p className="text-xs text-gray-500 max-w-md mx-auto">
+                    Run real-time research to extract total employee count along with location-wise, branch-wise, and office-wise headcount distribution.
+                  </p>
+                  <button
+                    onClick={() => triggerResearch(account.id, account.researchDepth)}
+                    className="px-4 py-2 text-xs font-bold text-white bg-[#091540] hover:bg-[#1a2d7c] rounded-lg shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+                  >
+                    <Lucide.Cpu className="w-3.5 h-3.5" />
+                    <span>Run Real-Time Research</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Total Employee Count</span>
+                      <p className="text-2xl font-black text-[#091540] mt-1">{hc.totalEmployees || 'Unknown'}</p>
+                      <span className="text-[11px] text-gray-500 mt-1 block">Source: {hc.asOfDate || 'Latest Public Filing'}</span>
+                    </div>
+                    <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Mapped Locations & Hubs</span>
+                      <p className="text-2xl font-black text-[#2563FF] mt-1">{hc.locations?.length || 0}</p>
+                      <span className="text-[11px] text-gray-500 mt-1 block">Verified branches, offices & plants</span>
+                    </div>
+                    <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Footprint Summary</span>
+                      <p className="text-xs font-medium text-gray-700 mt-1.5 leading-relaxed">{hc.branchSummary || 'No branch summary available.'}</p>
+                    </div>
+                  </div>
+
+                  <div className="bg-white border border-gray-100 rounded-xl shadow-xs overflow-hidden">
+                    <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-[#091540]">Location-Wise, Branch-Wise & Office-Wise Breakdown</h3>
+                      <span className="text-[10px] font-mono text-gray-400">{hc.locations?.length || 0} entries</span>
+                    </div>
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="bg-slate-50 border-b border-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                            <th className="py-3 px-4">Location / Campus</th>
+                            <th className="py-3 px-4">City</th>
+                            <th className="py-3 px-4">Country</th>
+                            <th className="py-3 px-4">Office Type</th>
+                            <th className="py-3 px-4">Est. Headcount</th>
+                            <th className="py-3 px-4">Notes</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {hc.locations?.length ? hc.locations.map((loc, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/60">
+                              <td className="py-3 px-4 font-bold text-[#091540]">{loc.location}</td>
+                              <td className="py-3 px-4 text-gray-700">{loc.city}</td>
+                              <td className="py-3 px-4 text-gray-700">{loc.country}</td>
+                              <td className="py-3 px-4">
+                                <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-bold">{loc.officeType}</span>
+                              </td>
+                              <td className="py-3 px-4 font-mono font-bold text-[#091540]">{loc.headcount}</td>
+                              <td className="py-3 px-4 text-gray-500">{loc.notes || '-'}</td>
+                            </tr>
+                          )) : (
+                            <tr>
+                              <td colSpan={6} className="py-6 text-center text-gray-400">No location-level breakdown disclosed publicly.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+                  {grounding.length > 0 && (
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2">
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Live Grounding Sources</span>
+                      <div className="flex flex-wrap gap-2">
+                        {grounding.map((src, idx) => (
+                          <a
+                            key={idx}
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[11px] text-blue-600 hover:underline bg-white border border-slate-200 px-2.5 py-1 rounded-lg inline-flex items-center gap-1"
+                          >
+                            <Lucide.ExternalLink className="w-3 h-3" />
+                            <span>{src.title}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* ======================================================== HEALTH & WELLNESS RADAR TAB */}
+        {currentDetailSubTab === 'wellness' && (() => {
+          const orch = orchestratedResearches[account.id];
+          const pre = orch?.data?.preEmploymentChecks;
+          const annual = orch?.data?.annualHealthChecks;
+          const camps = orch?.data?.onsiteHealthCamps;
+          const eng = orch?.data?.employeeEngagement;
+          const hasWellness = Boolean(pre || annual || camps || eng);
+
+          return (
+            <div className="space-y-6 animate-fade-in">
+              {!hasWellness ? (
+                <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-8 text-center space-y-3">
+                  <Lucide.HeartPulse className="w-8 h-8 text-slate-300 mx-auto" />
+                  <h3 className="text-sm font-bold text-[#091540]">Health & Wellness Intelligence Not Yet Synthesized</h3>
+                  <p className="text-xs text-gray-500 max-w-md mx-auto">
+                    Run real-time research to map pre-employment checks, annual health checkups, onsite health camps, and employee wellness programs.
+                  </p>
+                  <button
+                    onClick={() => triggerResearch(account.id, account.researchDepth)}
+                    className="px-4 py-2 text-xs font-bold text-white bg-[#091540] hover:bg-[#1a2d7c] rounded-lg shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+                  >
+                    <Lucide.Cpu className="w-3.5 h-3.5" />
+                    <span>Run Real-Time Research</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Card 1: Pre-Employment Health Checks */}
+                  <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-3">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Lucide.ClipboardCheck className="w-4 h-4 text-[#2563FF]" />
+                        <h3 className="text-sm font-bold text-[#091540]">Pre-Employment Health Checks</h3>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-blue-50 text-blue-700">
+                        {pre?.required || 'Unknown'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 leading-relaxed">{pre?.processSummary || 'No public details found.'}</p>
+                    {pre?.onboardingProtocol && (
+                      <div className="p-3 bg-slate-50 rounded-lg text-[11px] text-gray-700">
+                        <strong className="text-[#091540]">Onboarding Protocol:</strong> {pre.onboardingProtocol}
+                      </div>
+                    )}
+                    {pre?.mandatoryTests && pre.mandatoryTests.length > 0 && (
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Mandatory Screening Tests</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {pre.mandatoryTests.map((t, i) => (
+                            <span key={i} className="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-[11px] font-semibold">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card 2: Annual Health Check-Up Program */}
+                  <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-3">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Lucide.CalendarCheck className="w-4 h-4 text-emerald-600" />
+                        <h3 className="text-sm font-bold text-[#091540]">Annual Health Check-Up Program</h3>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-50 text-emerald-700">
+                        {annual?.offered || 'Unknown'}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 text-xs">
+                      <div className="p-2.5 bg-slate-50 rounded-lg">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase block">Cadence</span>
+                        <span className="font-semibold text-gray-800">{annual?.cadence || 'Unknown'}</span>
+                      </div>
+                      <div className="p-2.5 bg-slate-50 rounded-lg">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase block">Diagnostic Partner</span>
+                        <span className="font-semibold text-gray-800">{annual?.currentDiagnosticPartner || 'Undisclosed'}</span>
+                      </div>
+                      <div className="p-2.5 bg-slate-50 rounded-lg">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase block">Eligibility</span>
+                        <span className="font-semibold text-gray-800">{annual?.eligibility || 'Unknown'}</span>
+                      </div>
+                      <div className="p-2.5 bg-slate-50 rounded-lg">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase block">Renewal Window</span>
+                        <span className="font-semibold text-gray-800">{annual?.renewalWindow || 'Unknown'}</span>
+                      </div>
+                    </div>
+                    {annual?.packageScope && annual.packageScope.length > 0 && (
+                      <div className="space-y-1.5">
+                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider block">Package Scope</span>
+                        <div className="flex flex-wrap gap-1.5">
+                          {annual.packageScope.map((p, i) => (
+                            <span key={i} className="px-2 py-0.5 bg-emerald-50 text-emerald-800 rounded text-[11px] font-semibold">{p}</span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card 3: Onsite Health Camps */}
+                  <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-3">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Lucide.Stethoscope className="w-4 h-4 text-amber-600" />
+                        <h3 className="text-sm font-bold text-[#091540]">Onsite Health Camp Activities</h3>
+                      </div>
+                      <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-700">
+                        Active: {camps?.active || 'Unknown'}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600">
+                      <strong className="text-[#091540]">Frequency:</strong> {camps?.frequency || 'Unknown'}
+                    </p>
+                    {camps?.activities && camps.activities.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {camps.activities.map((act, i) => (
+                          <span key={i} className="px-2 py-0.5 bg-amber-50 text-amber-800 rounded text-[11px] font-semibold">{act}</span>
+                        ))}
+                      </div>
+                    )}
+                    {camps?.recentExamples && camps.recentExamples.length > 0 && (
+                      <ul className="space-y-1 text-xs text-gray-600 pt-1">
+                        {camps.recentExamples.map((ex, i) => (
+                          <li key={i} className="flex items-start gap-1.5">
+                            <span className="text-amber-500 mt-0.5">•</span>
+                            <span>{ex}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+
+                  {/* Card 4: Employee Engagement & Wellness Programs */}
+                  <div className="bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-3">
+                    <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Lucide.HeartHandshake className="w-4 h-4 text-purple-600" />
+                        <h3 className="text-sm font-bold text-[#091540]">Employee Engagement & Wellness</h3>
+                      </div>
+                      <span className="text-[10px] font-mono text-gray-400">{eng?.programs?.length || 0} programs</span>
+                    </div>
+                    <p className="text-xs text-gray-600 leading-relaxed">{eng?.summary || 'No wellness program summary available.'}</p>
+                    {eng?.existingPlatformsOrPartners && eng.existingPlatformsOrPartners.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5">
+                        {eng.existingPlatformsOrPartners.map((partner, i) => (
+                          <span key={i} className="px-2 py-0.5 bg-purple-50 text-purple-700 rounded text-[11px] font-semibold">{partner}</span>
+                        ))}
+                      </div>
+                    )}
+                    {eng?.programs && eng.programs.length > 0 && (
+                      <div className="space-y-2 pt-1 max-h-48 overflow-y-auto">
+                        {eng.programs.map((prog, i) => (
+                          <div key={i} className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 text-xs">
+                            <div className="flex items-center justify-between">
+                              <span className="font-bold text-[#091540]">{prog.name}</span>
+                              <span className="text-[10px] font-semibold text-purple-700">{prog.category}</span>
+                            </div>
+                            <p className="text-[11px] text-gray-600 mt-0.5">{prog.description}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {/* ======================================================== WELLNESS BUDGET & HR ORG TAB */}
+        {currentDetailSubTab === 'budget_hr' && (() => {
+          const orch = orchestratedResearches[account.id];
+          const wb = orch?.data?.wellnessBudget;
+          const hr = orch?.data?.hrOrgStructure;
+          const headcountNum = wb?.numericHeadcountUsed || orch?.data?.headcountDistribution?.numericTotal || 0;
+          const projectedDealINR = Math.round(headcountNum * (coveragePercent / 100) * selectedPackageRate);
+          const formatCompactINR = (val: number) => {
+            if (!val) return '₹0';
+            if (val >= 10000000) return `₹${(val / 10000000).toFixed(2)} Cr`;
+            if (val >= 100000) return `₹${(val / 100000).toFixed(2)} Lakhs`;
+            return `₹${val.toLocaleString('en-IN')}`;
+          };
+
+          return (
+            <div className="space-y-6 animate-fade-in">
+              {!wb && !hr ? (
+                <div className="bg-white border border-gray-100 shadow-sm rounded-xl p-8 text-center space-y-3">
+                  <Lucide.Wallet className="w-8 h-8 text-slate-300 mx-auto" />
+                  <h3 className="text-sm font-bold text-[#091540]">Wellness Budget & HR Organization Not Yet Synthesized</h3>
+                  <p className="text-xs text-gray-500 max-w-md mx-auto">
+                    Run real-time research to calculate corporate wellness budget estimates and map key HR leadership contacts.
+                  </p>
+                  <button
+                    onClick={() => triggerResearch(account.id, account.researchDepth)}
+                    className="px-4 py-2 text-xs font-bold text-white bg-[#091540] hover:bg-[#1a2d7c] rounded-lg shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+                  >
+                    <Lucide.Cpu className="w-3.5 h-3.5" />
+                    <span>Run Real-Time Research</span>
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Wellness Budget & Deal Sizing Calculator */}
+                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div className="lg:col-span-6 bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-4">
+                      <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <h3 className="text-sm font-bold text-[#091540]">Wellness & Engagement Budget</h3>
+                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${wb?.sourceType === 'Disclosed in Report'
+                            ? 'bg-emerald-50 text-emerald-700'
+                            : 'bg-amber-50 text-amber-700'
+                          }`}>
+                          {wb?.sourceType || 'AI Benchmark Estimate'}
+                        </span>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="p-3 bg-slate-50 rounded-lg">
+                          <span className="text-[10px] font-bold text-gray-400 uppercase block">Disclosed Budget</span>
+                          <span className="font-bold text-[#091540] text-sm mt-0.5 block">{wb?.disclosedBudget || 'Undisclosed'}</span>
+                        </div>
+                        <div className="p-3 bg-blue-50/70 border border-blue-100 rounded-lg">
+                          <span className="text-[10px] font-bold text-blue-600 uppercase block">Est. Annual Spend</span>
+                          <span className="font-black text-[#091540] text-sm mt-0.5 block">{wb?.estimatedTotalAnnualSpendINR || 'N/A'}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-gray-600 leading-relaxed">
+                        {wb?.estimationRationale || 'Calculated from verified corporate headcount and industry wellness spend benchmarks.'}
+                      </p>
+                    </div>
+
+                    {/* Interactive Indus Health Plus Package Sizing */}
+                    <div className="lg:col-span-6 bg-white border border-gray-100 rounded-xl p-5 shadow-xs space-y-4">
+                      <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                        <h3 className="text-sm font-bold text-[#091540]">Indus Health Plus Opportunity Sizing</h3>
+                        <span className="text-[10px] font-mono text-gray-400">
+                          Base: {headcountNum ? headcountNum.toLocaleString('en-IN') : '0'} employees
+                        </span>
+                      </div>
+
+                      <div className="space-y-3 text-xs">
+                        <div>
+                          <label className="text-[10px] font-bold text-gray-500 uppercase block mb-1.5">Select Indus Package Tier</label>
+                          <div className="grid grid-cols-3 gap-2">
+                            {[
+                              { label: 'Preventive Basic', rate: 1500 },
+                              { label: 'Corp Standard', rate: 2500 },
+                              { label: 'Executive Plus', rate: 4000 },
+                            ].map((pkg) => (
+                              <button
+                                key={pkg.rate}
+                                type="button"
+                                onClick={() => setSelectedPackageRate(pkg.rate)}
+                                className={`p-2 rounded-lg border text-center cursor-pointer transition-all ${selectedPackageRate === pkg.rate
+                                    ? 'bg-[#091540] text-white border-[#091540]'
+                                    : 'bg-slate-50 text-gray-700 border-gray-200 hover:bg-slate-100'
+                                  }`}
+                              >
+                                <span className="block font-bold text-[11px]">{pkg.label}</span>
+                                <span className="block text-[10px] opacity-80">₹{pkg.rate.toLocaleString('en-IN')}/emp</span>
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <div className="flex justify-between text-[11px] font-bold text-gray-600 mb-1">
+                            <span>Target Workforce Coverage</span>
+                            <span className="text-[#091540] font-mono">{coveragePercent}%</span>
+                          </div>
+                          <input
+                            type="range"
+                            min={10}
+                            max={100}
+                            step={5}
+                            value={coveragePercent}
+                            onChange={(e) => setCoveragePercent(Number(e.target.value))}
+                            className="w-full accent-[#2563FF] cursor-pointer"
+                          />
+                        </div>
+
+                        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-between">
+                          <span className="font-bold text-emerald-900">Projected Indus Deal Potential</span>
+                          <span className="text-lg font-black text-emerald-700 font-mono">{formatCompactINR(projectedDealINR)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* HR Organization Structure & Key Contacts */}
+                  <div className="bg-white border border-gray-100 rounded-xl shadow-xs overflow-hidden">
+                    <div className="px-5 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-2">
+                      <div>
+                        <h3 className="text-sm font-bold text-[#091540]">HR Organization & Key Decision Makers</h3>
+                        <p className="text-[11px] text-gray-500 mt-0.5">{hr?.structureSummary || 'HR team hierarchy and key wellness stakeholders'}</p>
+                      </div>
+                      <span className="px-2.5 py-1 rounded-lg bg-slate-100 text-[11px] font-bold text-[#091540]">
+                        Est. HR Team: {hr?.teamSizeEstimate || 'Unknown'}
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left border-collapse text-xs">
+                        <thead>
+                          <tr className="bg-slate-50 border-b border-gray-100 text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                            <th className="py-3 px-4">Contact Name</th>
+                            <th className="py-3 px-4">Title</th>
+                            <th className="py-3 px-4">Role Category</th>
+                            <th className="py-3 px-4">Decision Power</th>
+                            <th className="py-3 px-4">Focus Area</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                          {hr?.keyContacts && hr.keyContacts.length > 0 ? hr.keyContacts.map((c, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/60">
+                              <td className="py-3 px-4 font-bold text-[#091540]">{c.name}</td>
+                              <td className="py-3 px-4 text-gray-700">{c.title}</td>
+                              <td className="py-3 px-4">
+                                <span className="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-bold">{c.roleCategory}</span>
+                              </td>
+                              <td className="py-3 px-4">
+                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${c.decisionPower === 'High'
+                                    ? 'bg-emerald-50 text-emerald-700'
+                                    : c.decisionPower === 'Medium'
+                                      ? 'bg-amber-50 text-amber-700'
+                                      : 'bg-slate-100 text-slate-600'
+                                  }`}>
+                                  {c.decisionPower}
+                                </span>
+                              </td>
+                              <td className="py-3 px-4 text-gray-600">{c.focusArea}</td>
+                            </tr>
+                          )) : (
+                            <tr>
+                              <td colSpan={5} className="py-6 text-center text-gray-400">No HR contacts extracted yet.</td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           );
         })()}

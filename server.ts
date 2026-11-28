@@ -35,8 +35,10 @@ import {
   INITIAL_EVIDENCE,
 } from "./src/data.ts";
 import { INITIAL_ORCHESTRATED_RESEARCH } from "./src/orchestratedData.ts";
+import mongoose from "mongoose";
 import { requireAuth, AuthRequest } from "./src/middleware/auth.ts";
 import { deriveOwnerEmail } from "./src/lib/signalsEngine.ts";
+import { sendSignalDigestEmail, getEmailConfigSummary } from "./src/lib/emailService.ts";
 
 dotenv.config();
 
@@ -104,6 +106,164 @@ async function generateContentWithRetryAndFallback(
   throw lastError || new Error("Failed to generate content after trying fallback models.");
 }
 
+function extractGroundingSources(response: any): Array<{ title: string; url: string }> {
+  const chunks = response?.candidates?.[0]?.groundingMetadata?.groundingChunks;
+  if (!Array.isArray(chunks)) return [];
+  const seen = new Set<string>();
+  const sources: Array<{ title: string; url: string }> = [];
+  for (const chunk of chunks) {
+    const url = chunk?.web?.uri;
+    const title = chunk?.web?.title || url;
+    if (url && !seen.has(url)) {
+      seen.add(url);
+      sources.push({ title, url });
+    }
+  }
+  return sources;
+}
+
+async function generateGroundedStructuredContent(
+  ai: any,
+  params: {
+    model: string;
+    prompt: string;
+    systemInstruction: string;
+    responseSchema: any;
+  }
+): Promise<{ parsedData: any; groundingSources: Array<{ title: string; url: string }> }> {
+  // Attempt 1: Single-pass Google Search Grounding + Structured JSON Schema
+  try {
+    const response = await generateContentWithRetryAndFallback(ai, {
+      model: params.model,
+      contents: params.prompt,
+      config: {
+        systemInstruction: params.systemInstruction,
+        tools: [{ googleSearch: {} }],
+        responseMimeType: "application/json",
+        responseSchema: params.responseSchema,
+        temperature: 0.2,
+      },
+    });
+    const text = response?.text;
+    if (text) {
+      return {
+        parsedData: JSON.parse(text.trim()),
+        groundingSources: extractGroundingSources(response),
+      };
+    }
+  } catch (singlePassErr: any) {
+    console.warn(
+      "[Gemini Grounding] Single-pass Search + Schema failed, falling back to 2-pass grounded extraction:",
+      singlePassErr?.message || singlePassErr
+    );
+  }
+
+  // Attempt 2 (Resilient Fallback): Pass 1 = Live Google Search, Pass 2 = Strict JSON Extraction
+  const searchPrompt = `${params.prompt}
+
+Use live Google Search to gather up-to-date, verified public facts, numbers, CSR/ESG disclosures, Glassdoor/careers health benefits, and HR leadership names. Summarize all verified facts clearly with numbers and sources.`;
+
+  const searchResponse = await generateContentWithRetryAndFallback(ai, {
+    model: params.model,
+    contents: searchPrompt,
+    config: {
+      systemInstruction: "You are a factual corporate research analyst with live Google Search access. Gather accurate, real-time public facts without inventing data.",
+      tools: [{ googleSearch: {} }],
+      temperature: 0.1,
+    },
+  });
+
+  const groundedNotes = searchResponse?.text || "";
+  const groundingSources = extractGroundingSources(searchResponse);
+
+  const extractionPrompt = `Using ONLY the verified real-time research notes below (and without fabricating missing private figures), populate the requested JSON schema.
+
+VERIFIED LIVE RESEARCH NOTES:
+${groundedNotes}
+
+ORIGINAL TARGET CONTEXT:
+${params.prompt}`;
+
+  const structuredResponse = await generateContentWithRetryAndFallback(ai, {
+    model: params.model,
+    contents: extractionPrompt,
+    config: {
+      systemInstruction: params.systemInstruction,
+      responseMimeType: "application/json",
+      responseSchema: params.responseSchema,
+      temperature: 0.1,
+    },
+  });
+
+  const structuredText = structuredResponse?.text;
+  if (!structuredText) {
+    throw new Error("No response content generated from Gemini.");
+  }
+
+  return {
+    parsedData: JSON.parse(structuredText.trim()),
+    groundingSources,
+  };
+}
+
+function formatINR(amount: number): string {
+  if (!amount || amount <= 0) return "Undisclosed";
+  if (amount >= 10000000) {
+    return `₹${(amount / 10000000).toFixed(2)} Cr`;
+  }
+  if (amount >= 100000) {
+    return `₹${(amount / 100000).toFixed(2)} Lakhs`;
+  }
+  return `₹${amount.toLocaleString("en-IN")}`;
+}
+
+function applyWellnessBudgetHeuristic(parsedData: any, industry?: string) {
+  const wb = parsedData?.wellnessBudget || {};
+  const disclosed = String(wb.disclosedBudget || "").trim();
+  const isUndisclosed =
+    !disclosed ||
+    /undisclosed|unknown|no data|not disclosed|n\/a|none/i.test(disclosed);
+
+  let numericHeadcount = Number(parsedData?.headcountDistribution?.numericTotal || 0);
+  if (!numericHeadcount || isNaN(numericHeadcount)) {
+    const empStr = String(
+      parsedData?.headcountDistribution?.totalEmployees ||
+      parsedData?.company?.employees ||
+      ""
+    ).replace(/,/g, "");
+    const match = empStr.match(/\d+/);
+    if (match) numericHeadcount = parseInt(match[0], 10);
+  }
+
+  const ind = String(industry || "").toLowerCase();
+  const isHighTier = /tech|it|software|bank|finan|bfsi|pharma|health|consult|telecom/.test(ind);
+  const lowRate = isHighTier ? 2500 : 1500;
+  const highRate = isHighTier ? 4000 : 2500;
+  const midRate = Math.round((lowRate + highRate) / 2);
+
+  if (isUndisclosed && numericHeadcount > 0) {
+    const lowTotal = numericHeadcount * lowRate;
+    const highTotal = numericHeadcount * highRate;
+    parsedData.wellnessBudget = {
+      disclosedBudget: "Undisclosed (Private Corporate Allocation)",
+      sourceType: "AI Benchmark Estimate",
+      numericHeadcountUsed: numericHeadcount,
+      benchmarkRatePerEmployeeINR: midRate,
+      estimatedTotalAnnualSpendINR: `${formatINR(lowTotal)} – ${formatINR(highTotal)} / year`,
+      estimationRationale: `Calculated using verified headcount (${numericHeadcount.toLocaleString("en-IN")}) × industry wellness benchmark (₹${lowRate.toLocaleString("en-IN")}–₹${highRate.toLocaleString("en-IN")}/employee/yr for ${industry || "Enterprise"}).`,
+    };
+  } else {
+    parsedData.wellnessBudget = {
+      disclosedBudget: disclosed || "Undisclosed",
+      sourceType: isUndisclosed ? "AI Benchmark Estimate" : "Disclosed in Report",
+      numericHeadcountUsed: numericHeadcount || 0,
+      benchmarkRatePerEmployeeINR: wb.benchmarkRatePerEmployeeINR || midRate,
+      estimatedTotalAnnualSpendINR: wb.estimatedTotalAnnualSpendINR || (numericHeadcount > 0 ? `${formatINR(numericHeadcount * lowRate)} – ${formatINR(numericHeadcount * highRate)} / year` : "Insufficient headcount data"),
+      estimationRationale: wb.estimationRationale || (isUndisclosed ? "Insufficient public headcount or budget disclosures." : "Extracted from public CSR/ESG or annual report disclosures."),
+    };
+  }
+}
+
 // API: Research Orchestrator Endpoint
 app.post("/api/research", requireAuth, async (req: AuthRequest, res) => {
   const { accountName, website, industry, apiKey, model } = req.body;
@@ -129,15 +289,21 @@ app.post("/api/research", requireAuth, async (req: AuthRequest, res) => {
       }
     });
 
-    const prompt = `Perform an enterprise-grade target company research sweep for sales intelligence and account-based marketing alignment.
+    const prompt = `Perform a real-time, enterprise-grade corporate research sweep for Indus Health Plus (Corporate Preventive Healthcare & Wellness Solutions) targeting:
 Company Name: ${accountName}
 Website/Domain: ${website || "Not provided"}
-Primary Industry: ${industry || "Technology & Consulting"}
+Primary Industry: ${industry || "Corporate Enterprise"}
 
-Your output must be structured, realistic, and contain detailed insights about their technology stack, business model, SWOT analysis, executive leadership team, hiring trends, financial standing, strategic initiatives, and direct buying signals. 
-Include realistic source citations (like SEC Filings, Earnings Calls, Careers page, and Tech Index profiles) in your evidence lists to support your findings. Make sure descriptions are sophisticated, professional, and directly actionable.
+Using live web search results (Annual Reports, CSR/ESG filings, Careers pages, Glassdoor employee benefits, LinkedIn, and corporate news), extract BOTH general enterprise intelligence AND the 7 specific Corporate Health & HR insights below:
+1. Exact employee count (total headcount + location-wise, branch-wise, and office-wise breakdown).
+2. Employee engagement initiatives and wellness programs (EAP, mental health, fitness/gym tie-ups, preventive care apps).
+3. Pre-employment health check processes (mandatory medical tests, fit-to-work onboarding protocols).
+4. Annual health check-up program details (cadence, eligibility, diagnostic partners if disclosed, package scope).
+5. Onsite health camp / check-up activities (blood donation drives, vaccination camps, eye/dental camps, doctor-on-site).
+6. Budget allocated for employee wellness and engagement initiatives (from CSR/ESG disclosures if public, otherwise mark "Undisclosed").
+7. HR organization details (key HR contacts such as CHRO, Head of HR, Compensation & Benefits lead, Chief Medical Officer, Employee Wellbeing lead, and team structure).
 
-CRITICAL RULE FOR DATA INTEGRITY: If you cannot find any verified, reliable public information, news, or related data about this specific company (e.g., if it is too small, a private regional business, or does not exist), do NOT hallucinate or invent mock corporate descriptions, SWOT analyses, or fake technology findings. Instead, populate the output fields with clear "No data found" or "No verified information found" indicators (e.g., set description to "No verified public data found for this company.", founded/employees/headquarters to "Unknown", and leave lists empty or mark findings and SWOT lists as "No data found") to ensure absolute data integrity.`;
+CRITICAL RULE FOR DATA INTEGRITY: If you cannot find verified, reliable public information about a specific field or company, do NOT hallucinate or invent fake figures, fake diagnostic partners, or fake budgets. Use "Unknown" / "Undisclosed" / "No verified public data found" as appropriate.`;
 
     const responseSchema = {
       type: Type.OBJECT,
@@ -387,31 +553,140 @@ CRITICAL RULE FOR DATA INTEGRITY: If you cannot find any verified, reliable publ
             "businessSummary", "technologySummary", "currentInitiatives", "keyRisks",
             "keyOpportunities", "recommendedStrategy", "recommendedIndusServices", "overallConfidence"
           ]
+        },
+        headcountDistribution: {
+          type: Type.OBJECT,
+          properties: {
+            totalEmployees: { type: Type.STRING, description: "Formatted total headcount e.g. '323,000' or 'Unknown'" },
+            numericTotal: { type: Type.INTEGER, description: "Best numeric estimate of total employees (0 if unknown)" },
+            asOfDate: { type: Type.STRING, description: "Reporting period or source date" },
+            branchSummary: { type: Type.STRING, description: "Summary of office, branch, and plant footprint" },
+            locations: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  location: { type: Type.STRING },
+                  city: { type: Type.STRING },
+                  country: { type: Type.STRING },
+                  officeType: { type: Type.STRING, description: "Headquarters, Branch, Regional Office, Manufacturing Plant, or R&D Center" },
+                  headcount: { type: Type.STRING },
+                  notes: { type: Type.STRING }
+                },
+                required: ["location", "city", "country", "officeType", "headcount"]
+              }
+            }
+          },
+          required: ["totalEmployees", "numericTotal", "asOfDate", "branchSummary", "locations"]
+        },
+        employeeEngagement: {
+          type: Type.OBJECT,
+          properties: {
+            summary: { type: Type.STRING },
+            existingPlatformsOrPartners: { type: Type.ARRAY, items: { type: Type.STRING } },
+            programs: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  name: { type: Type.STRING },
+                  category: { type: Type.STRING, description: "Physical Wellness, Mental Health / EAP, Fitness / Gym, Preventive Care, or Engagement" },
+                  description: { type: Type.STRING },
+                  targetAudience: { type: Type.STRING }
+                },
+                required: ["name", "category", "description"]
+              }
+            }
+          },
+          required: ["summary", "existingPlatformsOrPartners", "programs"]
+        },
+        preEmploymentChecks: {
+          type: Type.OBJECT,
+          properties: {
+            required: { type: Type.STRING, description: "Yes (All Roles), Role-Specific, No, or Unknown" },
+            processSummary: { type: Type.STRING },
+            mandatoryTests: { type: Type.ARRAY, items: { type: Type.STRING } },
+            onboardingProtocol: { type: Type.STRING },
+            evidenceSources: { type: Type.ARRAY, items: { type: Type.STRING } }
+          },
+          required: ["required", "processSummary", "mandatoryTests", "onboardingProtocol", "evidenceSources"]
+        },
+        annualHealthChecks: {
+          type: Type.OBJECT,
+          properties: {
+            offered: { type: Type.STRING, description: "Yes, Executive Only, No, or Unknown" },
+            cadence: { type: Type.STRING },
+            eligibility: { type: Type.STRING },
+            packageScope: { type: Type.ARRAY, items: { type: Type.STRING } },
+            currentDiagnosticPartner: { type: Type.STRING },
+            renewalWindow: { type: Type.STRING }
+          },
+          required: ["offered", "cadence", "eligibility", "packageScope", "currentDiagnosticPartner", "renewalWindow"]
+        },
+        onsiteHealthCamps: {
+          type: Type.OBJECT,
+          properties: {
+            active: { type: Type.STRING, description: "Yes, No, or Unknown" },
+            activities: { type: Type.ARRAY, items: { type: Type.STRING } },
+            frequency: { type: Type.STRING },
+            recentExamples: { type: Type.ARRAY, items: { type: Type.STRING } }
+          },
+          required: ["active", "activities", "frequency", "recentExamples"]
+        },
+        wellnessBudget: {
+          type: Type.OBJECT,
+          properties: {
+            disclosedBudget: { type: Type.STRING, description: "Exact disclosed wellness/CSR budget or 'Undisclosed'" },
+            sourceType: { type: Type.STRING, description: "Disclosed in Report or AI Benchmark Estimate" },
+            numericHeadcountUsed: { type: Type.INTEGER },
+            benchmarkRatePerEmployeeINR: { type: Type.INTEGER },
+            estimatedTotalAnnualSpendINR: { type: Type.STRING },
+            estimationRationale: { type: Type.STRING }
+          },
+          required: ["disclosedBudget", "sourceType", "numericHeadcountUsed", "benchmarkRatePerEmployeeINR", "estimatedTotalAnnualSpendINR", "estimationRationale"]
+        },
+        hrOrgStructure: {
+          type: Type.OBJECT,
+          properties: {
+            teamSizeEstimate: { type: Type.STRING },
+            structureSummary: { type: Type.STRING },
+            keyContacts: {
+              type: Type.ARRAY,
+              items: {
+                type: Type.OBJECT,
+                properties: {
+                  name: { type: Type.STRING },
+                  title: { type: Type.STRING },
+                  roleCategory: { type: Type.STRING, description: "CHRO / Head of HR, Compensation & Benefits, Chief Medical Officer / EHS, Employee Wellbeing, or Talent Acquisition" },
+                  decisionPower: { type: Type.STRING, description: "High, Medium, or Low" },
+                  focusArea: { type: Type.STRING },
+                  source: { type: Type.STRING }
+                },
+                required: ["name", "title", "roleCategory", "decisionPower", "focusArea"]
+              }
+            }
+          },
+          required: ["teamSizeEstimate", "structureSummary", "keyContacts"]
         }
       },
       required: [
         "scoringFactors", "company", "business", "technology", "news", "hiring",
-        "financial", "strategic", "signals", "maturity", "opportunities", "executive"
+        "financial", "strategic", "signals", "maturity", "opportunities", "executive",
+        "headcountDistribution", "employeeEngagement", "preEmploymentChecks",
+        "annualHealthChecks", "onsiteHealthCamps", "wellnessBudget", "hrOrgStructure"
       ]
     };
 
-    const response = await generateContentWithRetryAndFallback(ai, {
+    const { parsedData, groundingSources } = await generateGroundedStructuredContent(ai, {
       model: activeModel,
-      contents: prompt,
-      config: {
-        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Indus Health Plus. You write beautiful, accurate, and detailed enterprise account analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.2,
-      },
+      prompt,
+      systemInstruction: "You are a professional, elite corporate healthcare intelligence analyst at Indus Health Plus. You synthesize live public web data into accurate, structured account intelligence without fabricating private facts. Never output markdown outside of the JSON schema.",
+      responseSchema,
     });
 
-    const text = response.text;
-    if (!text) {
-      throw new Error("No response content generated from Gemini.");
-    }
+    applyWellnessBudgetHeuristic(parsedData, industry);
+    parsedData.groundingSources = groundingSources;
 
-    const parsedData = JSON.parse(text.trim());
     return res.json(parsedData);
 
   } catch (error: any) {
@@ -564,23 +839,14 @@ Structure the output exactly according to the requested JSON format schema. Keep
       ]
     };
 
-    const response = await generateContentWithRetryAndFallback(ai, {
+    const { parsedData, groundingSources } = await generateGroundedStructuredContent(ai, {
       model: activeModel,
-      contents: prompt,
-      config: {
-        systemInstruction: "You are a professional, elite strategic sales engineer and Account Based Marketing analyst at Indus Health Plus. You write beautiful, accurate, and detailed enterprise stakeholder analyses. Never output markdown outside of the JSON schema, and ensure everything is deeply realistic and actionable.",
-        responseMimeType: "application/json",
-        responseSchema: responseSchema,
-        temperature: 0.2,
-      },
+      prompt,
+      systemInstruction: "You are a professional, elite corporate wellness & HR intelligence analyst at Indus Health Plus. You write accurate, real-time grounded stakeholder analyses without fabricating facts. Never output markdown outside of the JSON schema.",
+      responseSchema,
     });
 
-    const text = response.text;
-    if (!text) {
-      throw new Error("No response content generated from Gemini.");
-    }
-
-    const parsedData = JSON.parse(text.trim());
+    parsedData.groundingSources = groundingSources;
     return res.json(parsedData);
 
   } catch (error: any) {
@@ -1071,6 +1337,40 @@ app.get("/api/auth/me", requireAuth, async (req: AuthRequest, res) => {
       role: userRole
     });
   } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/api/system-status", requireAuth, async (_req: AuthRequest, res) => {
+  try {
+    const emailCfg = getEmailConfigSummary();
+    res.json({
+      mongodb: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+      databaseName: mongoose.connection.name || 'aiaccountintelligence',
+      geminiConfigured: Boolean(process.env.GEMINI_API_KEY),
+      email: {
+        enabled: emailCfg.enabled,
+        sender: emailCfg.sender,
+        recipient: emailCfg.recipient,
+        hasPassword: emailCfg.hasPassword,
+      }
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/signals/dispatch-email", requireAuth, async (req: AuthRequest, res) => {
+  try {
+    const { subject, digestText, accountCount, totalSignalsCount } = req.body;
+    const emailSubject = subject || `Indus Health Plus: ${totalSignalsCount || 0} Market Signal(s) Detected Across ${accountCount || 0} Account(s)`;
+    const result = await sendSignalDigestEmail({
+      subject: emailSubject,
+      text: digestText || 'Market signals refreshed. Please check the Notifications Console in the portal.',
+    });
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    console.error("Error dispatching signal email:", err);
     res.status(500).json({ error: err.message });
   }
 });

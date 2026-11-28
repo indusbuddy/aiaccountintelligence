@@ -381,6 +381,89 @@ export interface ResearchCoverage {
   overallScore: number; // 0 to 100
 }
 
+export interface HeadcountLocation {
+  location: string;
+  city: string;
+  country: string;
+  officeType: string;
+  headcount: string;
+  notes?: string;
+}
+
+export interface HeadcountDistribution {
+  totalEmployees: string;
+  numericTotal: number;
+  asOfDate: string;
+  locations: HeadcountLocation[];
+  branchSummary: string;
+}
+
+export interface EngagementProgram {
+  name: string;
+  category: string;
+  description: string;
+  targetAudience?: string;
+}
+
+export interface EmployeeEngagement {
+  summary: string;
+  programs: EngagementProgram[];
+  existingPlatformsOrPartners: string[];
+}
+
+export interface PreEmploymentChecks {
+  required: string;
+  processSummary: string;
+  mandatoryTests: string[];
+  onboardingProtocol: string;
+  evidenceSources: string[];
+}
+
+export interface AnnualHealthChecks {
+  offered: string;
+  cadence: string;
+  eligibility: string;
+  packageScope: string[];
+  currentDiagnosticPartner: string;
+  renewalWindow: string;
+}
+
+export interface OnsiteHealthCamps {
+  active: string;
+  activities: string[];
+  frequency: string;
+  recentExamples: string[];
+}
+
+export interface WellnessBudget {
+  disclosedBudget: string;
+  sourceType: 'Disclosed in Report' | 'AI Benchmark Estimate';
+  numericHeadcountUsed: number;
+  benchmarkRatePerEmployeeINR: number;
+  estimatedTotalAnnualSpendINR: string;
+  estimationRationale: string;
+}
+
+export interface HRKeyContact {
+  name: string;
+  title: string;
+  roleCategory: string;
+  decisionPower: string;
+  focusArea: string;
+  source?: string;
+}
+
+export interface HROrgStructure {
+  teamSizeEstimate: string;
+  structureSummary: string;
+  keyContacts: HRKeyContact[];
+}
+
+export interface GroundingSource {
+  title: string;
+  url: string;
+}
+
 export interface OrchestratedResearch {
   accountId: string;
   pipeline: Record<string, ModuleProgress>;
@@ -405,5 +488,13 @@ export interface OrchestratedResearch {
     maturity?: DigitalMaturity;
     opportunities?: OpportunityMapping[];
     executive?: ExecutiveSummary;
+    headcountDistribution?: HeadcountDistribution;
+    employeeEngagement?: EmployeeEngagement;
+    preEmploymentChecks?: PreEmploymentChecks;
+    annualHealthChecks?: AnnualHealthChecks;
+    onsiteHealthCamps?: OnsiteHealthCamps;
+    wellnessBudget?: WellnessBudget;
+    hrOrgStructure?: HROrgStructure;
+    groundingSources?: GroundingSource[];
   };
 }

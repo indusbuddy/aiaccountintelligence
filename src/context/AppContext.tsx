@@ -19,7 +19,7 @@ import {
   INITIAL_ORCHESTRATED_RESEARCH, getNotStartedPipeline, getCompletedPipeline, getInProgressPipeline
 } from '../orchestratedData';
 import {
-  RefreshSignalsSummary, SignalDispatchResult, getFreshSignalsForAccount, createAccountSignalDispatch, LEADERSHIP_EMAILS, deriveOwnerEmail, isAuthorizedForMarketSignals
+  RefreshSignalsSummary, SignalDispatchResult, getFreshSignalsForAccount, createAccountSignalDispatch, LEADERSHIP_EMAILS, deriveOwnerEmail, isAuthorizedForMarketSignals, generateEmailDigestText
 } from '../lib/signalsEngine';
 
 interface AppContextType {
@@ -977,7 +977,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
                 recommendedStrategy: apiData.executive?.recommendedStrategy || "Lead with co-innovation consults.",
                 recommendedIndusServices: apiData.executive?.recommendedIndusServices || [],
                 overallConfidence: apiData.executive?.overallConfidence || 85
-              }
+              },
+              headcountDistribution: apiData.headcountDistribution,
+              employeeEngagement: apiData.employeeEngagement,
+              preEmploymentChecks: apiData.preEmploymentChecks,
+              annualHealthChecks: apiData.annualHealthChecks,
+              onsiteHealthCamps: apiData.onsiteHealthCamps,
+              wellnessBudget: apiData.wellnessBudget,
+              hrOrgStructure: apiData.hrOrgStructure,
+              groundingSources: apiData.groundingSources || []
             }
           };
 
@@ -2017,6 +2025,18 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         type: summaryNotif.type,
         recipients: summaryNotif.recipients
       })
+    });
+
+    // Trigger backend SMTP email dispatch (respects ENABLE_EMAIL_NOTIFICATIONS in .env)
+    fetchWithAuth('/api/signals/dispatch-email', {
+      method: 'POST',
+      body: JSON.stringify({
+        accountCount: dispatches.length,
+        totalSignalsCount,
+        digestText: generateEmailDigestText(dispatches),
+      })
+    }).catch((err) => {
+      console.warn('Email dispatch request failed:', err);
     });
 
     setAccounts(updatedAccounts);

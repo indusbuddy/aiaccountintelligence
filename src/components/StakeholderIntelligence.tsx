@@ -677,7 +677,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                         </div>
 
                         <div>
-                          <span className="text-[10px] uppercase text-gray-400 font-bold block mb-1">Technology Alignment Angle</span>
+                          <span className="text-[10px] uppercase text-gray-400 font-bold block mb-1">Wellness &amp; Preventive Health Alignment Angle</span>
                           <p className="text-xs text-gray-700 font-medium leading-relaxed">
                             {intel.engagementStrategy.technologyAngle}
                           </p>
@@ -760,7 +760,7 @@ export const StakeholderIntelligence: React.FC<StakeholderIntelligenceProps> = (
                   <div className="space-y-6">
                     <div className="border-b border-gray-50 pb-4">
                       <h3 className="text-sm font-extrabold text-[#091540]">Recommended Indus Health Plus Solutions Offerings</h3>
-                      <p className="text-[11px] text-gray-400 font-semibold mt-0.5">Specific solution alignments based on current technology landscape and company challenges</p>
+                      <p className="text-[11px] text-gray-400 font-semibold mt-0.5">Specific Indus Health Plus solution alignments based on workforce health &amp; HR priorities</p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

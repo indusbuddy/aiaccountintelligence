@@ -31,6 +31,34 @@ const AppContent: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSignalsModal, setShowSignalsModal] = useState(false);
   const [signalsModalAccountId, setSignalsModalAccountId] = useState<string | null>(null);
+  const [showCredentialsModal, setShowCredentialsModal] = useState(false);
+  const [systemStatus, setSystemStatus] = useState<{
+    mongodb: string;
+    databaseName: string;
+    geminiConfigured: boolean;
+    email: { enabled: boolean; sender: string; recipient: string; hasPassword: boolean };
+  } | null>(null);
+  const [statusLoading, setStatusLoading] = useState(false);
+
+  const handleOpenCredentialsModal = async () => {
+    setShowUserDropdown(false);
+    setShowCredentialsModal(true);
+    setStatusLoading(true);
+    try {
+      const token = typeof user?.getIdToken === 'function' ? await user.getIdToken() : 'mock-dev-token';
+      const res = await fetch('/api/system-status', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setSystemStatus(data);
+      }
+    } catch (err) {
+      console.warn('Failed to fetch system status:', err);
+    } finally {
+      setStatusLoading(false);
+    }
+  };
 
   if (authLoading) {
     return (
@@ -251,7 +279,7 @@ const AppContent: React.FC = () => {
           <div className="mt-8 flex items-center justify-center gap-6 border-t border-slate-100 pt-6 w-full text-slate-400 font-mono text-[9px] uppercase tracking-wider font-bold">
             <span className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Cloud SQL Active
+              MongoDB Atlas Active
             </span>
             <span className="flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -574,10 +602,7 @@ const AppContent: React.FC = () => {
                     </button>
 
                     <button
-                      onClick={() => {
-                        alert('System is integrated via Google AI Studio context. Credentials locked.');
-                        setShowUserDropdown(false);
-                      }}
+                      onClick={handleOpenCredentialsModal}
                       className="w-full text-left px-4 py-2 hover:bg-slate-50 transition-colors flex items-center gap-2 cursor-pointer text-gray-600"
                     >
                       <Lucide.KeyRound className="w-4 h-4 text-gray-400" />
@@ -707,6 +732,103 @@ const AppContent: React.FC = () => {
         onClose={() => setShowSignalsModal(false)}
         targetAccountId={signalsModalAccountId}
       />
+
+      {/* System Credentials & Integration Status Modal */}
+      {showCredentialsModal && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-2xl w-full max-w-md overflow-hidden">
+            <div className="px-6 py-4 bg-[#091540] text-white flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <Lucide.KeyRound className="w-4 h-4 text-blue-400" />
+                <h3 className="text-sm font-bold">System Credentials & Integration Status</h3>
+              </div>
+              <button
+                onClick={() => setShowCredentialsModal(false)}
+                className="p-1 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              >
+                <Lucide.X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-xs text-gray-500 leading-relaxed">
+                Platform API secrets and database credentials are managed centrally on the backend server via <code className="px-1.5 py-0.5 bg-slate-100 rounded text-[11px] font-mono">.env</code>.
+              </p>
+
+              {statusLoading ? (
+                <div className="flex items-center justify-center py-6 text-xs text-gray-500 gap-2">
+                  <Lucide.Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                  <span>Checking backend status...</span>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-[#091540] block">MongoDB Atlas</span>
+                      <span className="text-[11px] text-gray-500 font-mono">
+                        DB: {systemStatus?.databaseName || 'aiaccountintelligence'}
+                      </span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${systemStatus?.mongodb === 'connected'
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-amber-100 text-amber-700'
+                      }`}>
+                      {systemStatus?.mongodb === 'connected' ? 'Connected' : 'Pending'}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div>
+                      <span className="text-xs font-bold text-[#091540] block">Google Gemini AI Engine</span>
+                      <span className="text-[11px] text-gray-500">Server-managed API key</span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${systemStatus?.geminiConfigured
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-rose-100 text-rose-700'
+                      }`}>
+                      {systemStatus?.geminiConfigured ? 'Configured' : 'Missing Key'}
+                    </span>
+                  </div>
+
+                  <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                    <div className="min-w-0 pr-2">
+                      <span className="text-xs font-bold text-[#091540] block">SMTP Email Dispatch</span>
+                      <span className="text-[10px] text-gray-500 block truncate">
+                        From: {systemStatus?.email?.sender || 'ecomm.indus@gmail.com'} &rarr; {systemStatus?.email?.recipient || 'samarth.patki@indushealthplus.com'}
+                      </span>
+                    </div>
+                    <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold shrink-0 ${systemStatus?.email?.enabled
+                        ? 'bg-emerald-100 text-emerald-700'
+                        : 'bg-slate-200 text-slate-700'
+                      }`}>
+                      {systemStatus?.email?.enabled ? 'Enabled' : 'Disabled (Dry-Run)'}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              <div className="pt-2 flex items-center justify-end gap-2">
+                <button
+                  onClick={() => setShowCredentialsModal(false)}
+                  className="px-3.5 py-2 text-xs font-semibold text-gray-600 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setShowCredentialsModal(false);
+                    navigate('settings');
+                  }}
+                  className="px-4 py-2 text-xs font-bold text-white bg-[#091540] hover:bg-[#132a6e] rounded-lg transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Lucide.Sliders className="w-3.5 h-3.5" />
+                  <span>Open Settings</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
